@@ -1,0 +1,125 @@
+<div style="display: flex;flex-direction: row;height: 100%;overflow: auto;">
+    <div style="width: 290px;height: auto;min-height: 91vh;background: black;">
+        <div style="color: white;margin: 10px;font-weight: bold;font-size: 22px;align-items: center;display: flex;display: flex;width: 230px;">
+            <!-- <mat-icon class="icono" style="color: white;margin: 10px;margin-left: 3px;cursor: pointer;" (click)="navigateWithParams()">arrow_back_ios_new</mat-icon> -->
+            <div style="display: flex;flex-direction: column;align-items: center;width: 100%;">
+
+                <div *ngIf="usrImg == ''">
+                    <button mat-icon-button style="width: auto; height: auto;" [matMenuTriggerFor]="menu">
+                <img src="../assets/user-palceholder.png" style="width: 35px; height: 35px;padding: 5px;">
+                </button>
+                </div>
+                <div *ngIf="usrImg != ''" style="display: flex;">
+                    <button mat-icon-button tyle="width: 50px; height: 50px;" [matMenuTriggerFor]="menu">
+                <img [src]="usrImg" style="width: 40px; height: 40px; border-radius: 50%;object-fit: cover;padding: 5px;">
+                </button>
+                </div>
+                <span style="margin-right: 10px;margin-top: 10px;">{{userName}}</span>
+            </div>
+        </div>
+        <mat-divider style="margin-bottom: 5px;margin-top: 5px;background: white;"></mat-divider>
+        <div style="display: flex;flex-direction: column;">
+            <button mat-icon-button routerLink='/profile' style="color: white;"><mat-icon class="icono" style="color: white;margin-right: 10px;margin-left: 10px;">badge</mat-icon>Mi Cuenta</button>
+            <div *ngIf="usrRole == 'admin'">
+                <button mat-icon-button routerLink='/categories' style="color: white;font-weight: bold;font-size: 20px;"><mat-icon class="icono" style="color: white;margin-right: 10px;margin-left: 10px;">dashboard_customize</mat-icon>Categorías</button>
+            </div>
+            <div *ngIf="usrRole == 'admin'">
+                <button mat-icon-button routerLink='/tramites' style="color: white;"><mat-icon class="icono" style="color: white;margin-right: 10px;margin-left: 10px;">grading</mat-icon>Trámites</button>
+            </div>
+            <div *ngIf="usrRole == 'admin'">
+                <button mat-icon-button routerLink='/recomendacion-admin' style="color: white;"><mat-icon class="icono" style="color: white;margin-right: 10px;margin-left: 10px;">wechat</mat-icon>Sugerencias</button>
+            </div>
+            <div *ngIf="usrRole == 'admin'">
+                <button mat-icon-button routerLink='/notifications' style="color: white;"><mat-icon class="icono" style="color: white;margin-right: 10px;margin-left: 10px;">notifications</mat-icon>Notificaciones</button>
+            </div>
+        </div>
+    </div>
+    <!-- para ver todas las categorias -->
+    <div *ngIf="catSelected == 'initial'" style="width: 100%;">
+        <div style="font-size: 20px;color: white;font-weight: bolder;padding: 10px;background: #ad2101;margin-bottom: 30px;">
+            <span>Lista de Categorías</span>
+        </div>
+        <div style="width: 70%;font-size: 15px;font-weight: bold;padding: 10px;">
+            <span>Este módulo te permite agregar una nueva categoría</span>
+        </div>
+        <div style="position: absolute; right: 0;margin: 25px;z-index: 999;top: 130px;">
+            <button mat-button (click)="registerNewCategory()" style="background-color: #A40000;color: white;">
+                <mat-icon>add</mat-icon>
+                Agregar nueva categoría
+            </button>
+        </div>
+
+        <br>
+
+        <div style=" border: 2px solid;padding: 5px;border-radius: 10px;margin-top: 0px;">
+            <span>Buscar: </span>
+            <input type="text" [(ngModel)]="filterSearch" (ngModelChange)="searchData($event)" />
+        </div>
+
+        <br>
+
+        <div style="display: flex;flex-direction: row;flex-wrap: wrap;justify-content: space-evenly;gap: 5px;padding: 20px;margin-top: 20px">
+            <div *ngFor="let cat of filteredCategories">
+                <div style="background: royalblue;padding: 10px;display: flex;flex-direction: column;justify-content: space-between;align-items: center;align-content: center;font-weight: bold;cursor: pointer;" (click)="changeCat(cat)">
+                    <!-- <mat-icon mat-icon style="font-size: 60px; width: 60px; height: 60px;">language</mat-icon> -->
+                    <img [src]="cat.cover" style="width: 220px;height: 150px;">
+                    <p>{{cat.name}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- se muestran las categorias y se crean sub-categorias -->
+    <div *ngIf="catSelected != 'initial'" style="width: 100%;">
+        <div style="display: flex;width: 100%;flex-direction: column;align-items: center;">
+            <button mat-button (click)="catSelected = 'initial'" style="background-color: #A60000;color: white;width: 100%;">
+                <mat-icon class="icono" style="color: white;margin: 10px;margin-left: 3px;cursor: pointer;" (click)="catSelected = 'initial'">arrow_back_ios_new</mat-icon>
+                Volver
+            </button>
+            <div style="width: 100%;font-size: 15px;font-weight: bold;padding: 10px;">
+                <span>Este módulo te permite gestionar una categoría</span>
+            </div>
+            <span style="font-size: 15px;font-weight: bold;margin: 15px;background: #38c8a8;padding: 20px;border-radius: 5px;color: white;">{{ catSelected.name }}</span>
+            <img [src]="catSelected.cover" style="width: 150px;border-radius: 10px;object-fit: contain;">
+            <span style="font-size: 20px;margin-top: 25px;">{{ catSelected.desc }}</span>
+            <div style="margin-top: 5px;">
+                <button mat-flat-button (click)="editCategory(catSelected)" style="margin-right: 10px;color: white;background-color: #001F3E;">Editar</button>
+                <button id="save" mat-flat-button color='primary' (click)="deleteConfirm(catSelected.id)" style="color: white;background-color:#a00;">Eliminar</button>
+            </div>
+        </div>
+        <hr style="width: 95%;">
+        <div style="width: 100%;font-size: 15px;font-weight: bold;padding: 10px;display: flex;align-items: center;justify-content: space-between;">
+            <span>Este módulo te permite agregar y gestionar una subcategoría</span>
+            <button mat-flat-button (click)="registerNewSubCategory(catSelected.subcats, catSelected.id)" style="background: #a00;color: white;margin-right: 15px;">
+                <mat-icon>add</mat-icon>
+                Agregar nueva subcategoría</button>
+        </div>
+        <div style="display: flex;width: 100%;flex-direction: column;align-items: center;">
+            <span style="font-size: 15px;font-weight: bold;margin: 15px;background: #38c8a8;padding: 20px;border-radius: 5px;color: white;">Crear subcategoría</span>
+            <div style="margin-top: 5px; ">
+
+            </div>
+            <div *ngFor="let subc of catSelected.subcats" style="display: flex;flex-direction: row;width: 100%;">
+                <div style="display: flex;width: 100%;justify-content: center;align-items: center;padding: 10px;border: 2px solid;margin: 5px;border-radius: 10px;">
+                    <span>{{ subc.name }}</span>
+                    <div style="flex:1 0 auto;"></div>
+                    <button mat-flat-button (click)="editSubCategory(catSelected, catSelected.id, subc.name)" style="margin-right: 10px;color: white;background-color: #001F3E;">Renombrar</button>
+                    <div *ngIf='subc.temas.length == 0'>
+                        <button mat-flat-button color='primary' (click)="deleteConfirmSub(catSelected.id, subc.name, catSelected.subcats)" style="color: white;background-color:#a00;">Eliminar</button>
+                    </div>
+                    <div *ngIf='subc.temas.length >= 1'>
+                        <button mat-flat-button color='primary' (click)="deleteConfirmSub(catSelected.id, subc.name, catSelected.subcats)" style="color: white;background-color: grey;" disabled>Eliminar</button>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<mat-menu #menu="matMenu">
+    <!-- <div *ngIf="isLogged && User.role == 'profesor' && User.enabled">
+      <button mat-menu-item routerLink='courses'>Cursos</button>
+    </div> -->
+    <button mat-menu-item (click)="logOutUser()">Cerrar Sesión</button>
+</mat-menu>

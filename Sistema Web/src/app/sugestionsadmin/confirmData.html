@@ -1,0 +1,14 @@
+<div>
+    <span>Seguro que desea {{ cause }}?</span>
+    <mat-divider></mat-divider>
+    <div>
+        <span>Razon:</span>
+        <textarea matInput id='desc' style="min-height: 100px;"></textarea>
+    </div>
+    <div style="margin-top: 20px;
+    display: flex;
+    justify-content: space-between;">
+        <button mat-button (click)="confirmed()" style="background: #a00;color:white;margin-right: 5px;">Enviar</button>   
+        <button mat-button (click)="cancel()" style="background: rgb(148, 146, 146);color:black;margin-right: 5px;">Cancelar</button>   
+    </div>
+</div>

@@ -1,0 +1,256 @@
+<div style="display: flex;flex-direction: row;">
+    <div style="width: 290px;height: auto;min-height: 91vh;background: black;">
+        <div style="color: white;margin: 10px;font-weight: bold;font-size: 22px;align-items: center;display: flex;display: flex;width: 230px;">
+            <!-- <mat-icon class="icono" style="color: white;margin: 10px;margin-left: 3px;cursor: pointer;" (click)="navigateWithParams()">arrow_back_ios_new</mat-icon> -->
+            <div style="display: flex;flex-direction: column;align-items: center;width: 100%;">
+
+                <div *ngIf="userUrl == ''">
+                    <button mat-icon-button style="width: auto; height: auto;" [matMenuTriggerFor]="menu">
+                  <img src="../assets/user-palceholder.png" style="width: 35px; height: 35px;padding: 5px;">
+                </button>
+                </div>
+                <div *ngIf="userUrl != ''" style="display: flex;">
+                    <button mat-icon-button tyle="width: 50px; height: 50px;" [matMenuTriggerFor]="menu">
+                  <img [src]="userUrl" style="width: 40px; height: 40px; border-radius: 50%;object-fit: cover;padding: 5px;">
+                </button>
+                </div>
+                <span style="margin-right: 10px;margin-top: 10px;">{{User.name}}</span>
+            </div>
+        </div>
+        <mat-divider style="margin-bottom: 5px;margin-top: 5px;background: white;"></mat-divider>
+        <div style="display: flex;flex-direction: column;">
+            <button mat-icon-button routerLink='/profile' style="color: white;"><mat-icon class="icono" style="color: white;margin-right: 10px;margin-left: 10px;">badge</mat-icon>Mi Cuenta</button>
+            <div *ngIf="usrRole == 'admin'">
+                <button mat-icon-button routerLink='/categories' style="color: white;"><mat-icon class="icono" style="color: white;margin-right: 10px;margin-left: 10px;">dashboard_customize</mat-icon>Categorias</button>
+            </div>
+            <div *ngIf="usrRole != 'admin'">
+                <button mat-icon-button routerLink='/categorias' style="color: white;"><mat-icon class="icono" style="color: white;margin-right: 10px;margin-left: 10px;">dashboard_customize</mat-icon>Categorias</button>
+            </div>
+            <div *ngIf="usrRole == 'admin'">
+                <button mat-icon-button routerLink='/tramites' style="color: white;"><mat-icon class="icono" style="color: white;margin-right: 10px;margin-left: 10px;">grading</mat-icon>Trámites</button>
+            </div>
+            <div *ngIf="usrRole == 'admin'">
+                <button mat-icon-button routerLink='/recomendacion-admin' style="color: white;font-weight: bold;font-size: 20px;"><mat-icon class="icono" style="color: white;margin-right: 10px;margin-left: 10px;">wechat</mat-icon>Sugerencias</button>
+            </div>
+            <div *ngIf="usrRole == 'admin'">
+                <button mat-icon-button routerLink='/notifications' style="color: white;"><mat-icon class="icono" style="color: white;margin-right: 10px;margin-left: 10px;">notifications</mat-icon>Notificaciones</button>
+            </div>
+        </div>
+    </div>
+    <!-- <div style="display: flex; justify-content: center; width: 100%; height: 500px;"> -->
+    <div style="padding: 0px;display: flex;align-items: center;justify-content: flex-start;    width: 100%;flex-direction: column;">
+        <!--*ngIf="reqList.length > 0"-->
+
+        <div *ngIf="listView == 'Pending'" style="width: 100%;">
+            <div style="font-size: 20px;color: white;font-weight: bolder;text-align:left;padding: 10px;background: #ad2101;margin-bottom: 30px;">
+                <span>Lista de Pendientes</span>
+            </div>
+            <div style="width: 95%;font-size: 15px;font-weight: bold;padding: 10px;">
+                <span>Este módulo te permite gestionar las quejas, novedades y sugerencias de los estudiantes</span>
+            </div>
+            <div style="width: 100%;display: flex;flex-direction: row;justify-content: space-evenly;margin-bottom: 10px;">
+                <button mat-flat-button style="margin-top: 5px;font-size: 22px;border: 2px solid black;background: #41ce7c;" (click)="listView = 'Approved'">Aceptados</button>
+                <button mat-flat-button style="margin-top: 5px;font-size: 22px;border: 2px solid black;background: rgb(167, 34, 34);" (click)="listView = 'Denied'">Denegados</button>
+            </div>
+            <div style="border: 2px solid;padding: 5px;border-radius: 10px;margin-top: 5px;">
+                <span>Buscar: </span>
+                <input type="text" [(ngModel)]="filterSearch" (ngModelChange)="searchData($event)" />
+            </div>
+            <table style="background: white;width: 100%;" mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+                <!-- mail Column -->
+                <ng-container matColumnDef="desc">
+                    <th mat-header-cell *matHeaderCellDef style="color: grey;font-size: 14px;"> Descripcion </th>
+                    <td mat-cell *matCellDef="let reqList" style="color: grey; font-size: 12px;"> {{reqList.desc}} </td>
+                </ng-container>
+
+                <!-- type Column -->
+                <ng-container matColumnDef="reason">
+                    <th mat-header-cell *matHeaderCellDef style="color: grey;font-size: 14px;"> Tipo </th>
+                    <td mat-cell *matCellDef="let reqList" style="color: grey; font-size: 12px;"> {{reqList.reason}} </td>
+                </ng-container>
+
+                <!-- type Column -->
+                <ng-container matColumnDef="state">
+                    <th mat-header-cell *matHeaderCellDef style="color: grey;font-size: 14px;"> Estado </th>
+                    <td mat-cell *matCellDef="let reqList" style="color: grey; font-size: 12px;"> {{reqList.state}} </td>
+                </ng-container>
+
+                <!-- type Column -->
+                <ng-container matColumnDef="causeState">
+                    <th mat-header-cell *matHeaderCellDef style="color: grey;font-size: 14px;"> Leido </th>
+                    <td mat-cell *matCellDef="let reqList" style="color: grey; font-size: 12px;">
+                        <div *ngIf="reqList.unread">No Leido</div>
+                        <div *ngIf="!reqList.unread">Leido</div>
+                    </td>
+                </ng-container>
+
+                <!-- action Column -->
+                <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef style="color: grey;font-size: 14px;"> Aprobar </th>
+                    <td mat-cell *matCellDef="let reqList" style="color: grey; font-size: 12px;">
+                        <button mat-button (click)="AcceptRequests(reqList.id)" style="background-color: chartreuse;">
+                          ACEPTAR <mat-icon>done</mat-icon>
+                      </button>
+                    </td>
+                </ng-container>
+
+                <!-- action Column -->
+                <ng-container matColumnDef="action2">
+                    <th mat-header-cell *matHeaderCellDef style="color: grey;font-size: 14px;"> Rechazar </th>
+                    <td mat-cell *matCellDef="let reqList" style="color: grey; font-size: 12px;">
+                        <button mat-button (click)="DenyRequests(reqList.id)" style="background-color: #A00000;color: white;">
+                          RECHAZAR <mat-icon>cancel</mat-icon>
+                      </button>
+                    </td>
+                </ng-container>
+
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let reqList; columns: displayedColumns;"></tr>
+            </table>
+            <mat-paginator [pageSizeOptions]="[10, 5, 25, 100]" style="width: 80%;position: fixed;bottom: 0px;background: transparent;margin-right: 25px;"></mat-paginator>
+            <div style="padding: 15px;display: flex;align-content: center;align-items: center;justify-content: center;flex-direction: column;" *ngIf="reqList.length < 1">
+                <div style="display: flex;height: 30vh;"></div>
+                <span style="border-radius: 15px;border: 2px solid;padding: 30px;opacity: 55%;background: lightskyblue;">
+                No hay pendientes
+            </span>
+                <div _ngcontent-uxv-c153="" style="display: flex; height: 30vh;"></div>
+            </div>
+        </div>
+        <div *ngIf="listView == 'Approved'" style="width: 100%;">
+            <div style="width: 100%;display: flex;flex-direction: row;justify-content: space-evenly;margin-bottom: 10px;">
+                <button mat-button (click)="listView = 'Pending'" style="background-color: #A60000;color: white;width: 100%;">
+              <mat-icon class="icono" style="color: white;margin: 10px;margin-left: 3px;cursor: pointer;">arrow_back_ios_new</mat-icon>
+              Volver
+            </button>
+            </div>
+            <div style="width: 100%;font-size: 15px;font-weight: bold;padding: 10px;">
+                <span>Este módulo te permite eliminar las quejas, sugerencias y novedades aceptadas.</span>
+            </div>
+            <h3>Lista de Aprovados</h3>
+            <div style="border: 2px solid;padding: 5px;border-radius: 10px;margin-top: 5px;">
+                <span>Buscar: </span>
+                <input type="text" [(ngModel)]="filterSearch" (ngModelChange)="searchData($event)" />
+            </div>
+            <table style="background: white;width: 100%;" mat-table [dataSource]="dataSourceApproved" class="mat-elevation-z8">
+                <!-- mail Column -->
+                <ng-container matColumnDef="desc">
+                    <th mat-header-cell *matHeaderCellDef style="color: grey;font-size: 14px;"> Descripcion </th>
+                    <td mat-cell *matCellDef="let reqListApproved" style="color: grey; font-size: 12px;"> {{reqListApproved.desc}} </td>
+                </ng-container>
+
+                <!-- type Column -->
+                <ng-container matColumnDef="reason">
+                    <th mat-header-cell *matHeaderCellDef style="color: grey;font-size: 14px;"> Tipo </th>
+                    <td mat-cell *matCellDef="let reqListApproved" style="color: grey; font-size: 12px;"> {{reqListApproved.reason}} </td>
+                </ng-container>
+
+                <!-- type Column -->
+                <ng-container matColumnDef="state">
+                    <th mat-header-cell *matHeaderCellDef style="color: grey;font-size: 14px;"> Estado </th>
+                    <td mat-cell *matCellDef="let reqListApproved" style="color: grey; font-size: 12px;"> {{reqListApproved.state}} </td>
+                </ng-container>
+
+                <!-- type Column -->
+                <ng-container matColumnDef="causeState">
+                    <th mat-header-cell *matHeaderCellDef style="color: grey;font-size: 14px;"> Razon </th>
+                    <td mat-cell *matCellDef="let reqListApproved" style="color: grey; font-size: 12px;"> {{reqListApproved.stateReason}} </td>
+                </ng-container>
+
+                <!-- type Column -->
+                <ng-container matColumnDef="leido">
+                    <th mat-header-cell *matHeaderCellDef style="color: grey;font-size: 14px;"> Leido </th>
+                    <td mat-cell *matCellDef="let reqListApproved" style="color: grey; font-size: 12px;">
+                        <div *ngIf="reqListApproved.unread">No Leido</div>
+                        <div *ngIf="!reqListApproved.unread">Leido</div>
+                    </td>
+                </ng-container>
+
+                <!-- type Column -->
+                <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef style="color: grey;font-size: 14px;"> Borrar </th>
+                    <td mat-cell *matCellDef="let reqListApproved" style="color: grey; font-size: 12px;">
+                        <button mat-button (click)="eraseNot(reqListApproved.id)" style="background-color: #A60000;color: white;">Borrar</button>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsApproved; sticky: true"></tr>
+                <tr mat-row *matRowDef="let reqListApproved; columns: displayedColumnsApproved;"></tr>
+            </table>
+            <mat-paginator [pageSizeOptions]="[10, 5, 25, 100]" style="width: 80%;position: fixed;bottom: 0px;background: transparent;margin-right: 25px;"></mat-paginator>
+        </div>
+        <div *ngIf="listView == 'Denied'" style="width: 100%;">
+            <div style="width: 100%;display: flex;flex-direction: row;justify-content: space-evenly;margin-bottom: 10px;">
+                <button mat-button (click)="listView = 'Pending'" style="background-color: #A60000;color: white;width: 100%;">
+                <mat-icon class="icono" style="color: white;margin: 10px;margin-left: 3px;cursor: pointer;">arrow_back_ios_new</mat-icon>
+                Volver
+                </button>
+            </div>
+            <div style="width: 95%;font-size: 15px;font-weight: bold;padding: 10px;">
+                <span>Este módulo te permite eliminar las quejas, sugerencias y novedades rechazadas.</span>
+            </div>
+            <h3>Lista de Rechazados</h3>
+            <div style="border: 2px solid;padding: 5px;border-radius: 10px;margin-top: 5px;">
+                <span>Buscar: </span>
+                <input type="text" [(ngModel)]="filterSearch" (ngModelChange)="searchData($event)" />
+            </div>
+            <table style="background: white;width: 100%;" mat-table [dataSource]="dataSourceDenied" class="mat-elevation-z8">
+                <!-- mail Column -->
+                <ng-container matColumnDef="desc">
+                    <th mat-header-cell *matHeaderCellDef style="color: grey;font-size: 14px;"> Descripcion </th>
+                    <td mat-cell *matCellDef="let reqListDenied" style="color: grey; font-size: 12px;"> {{reqListDenied.desc}} </td>
+                </ng-container>
+
+                <!-- type Column -->
+                <ng-container matColumnDef="reason">
+                    <th mat-header-cell *matHeaderCellDef style="color: grey;font-size: 14px;"> Tipo </th>
+                    <td mat-cell *matCellDef="let reqListDenied" style="color: grey; font-size: 12px;"> {{reqListDenied.reason}} </td>
+                </ng-container>
+
+                <!-- type Column -->
+                <ng-container matColumnDef="state">
+                    <th mat-header-cell *matHeaderCellDef style="color: grey;font-size: 14px;"> Estado </th>
+                    <td mat-cell *matCellDef="let reqListDenied" style="color: grey; font-size: 12px;"> {{reqListDenied.state}} </td>
+                </ng-container>
+
+                <!-- type Column -->
+                <ng-container matColumnDef="causeState">
+                    <th mat-header-cell *matHeaderCellDef style="color: grey;font-size: 14px;"> Razon </th>
+                    <td mat-cell *matCellDef="let reqListDenied" style="color: grey; font-size: 12px;"> {{reqListDenied.stateReason}} </td>
+                </ng-container>
+
+                <!-- type Column -->
+                <ng-container matColumnDef="leido">
+                    <th mat-header-cell *matHeaderCellDef style="color: grey;font-size: 14px;"> Leido </th>
+                    <td mat-cell *matCellDef="let reqListDenied" style="color: grey; font-size: 12px;">
+                        <div *ngIf="reqListDenied.unread">No Leido</div>
+                        <div *ngIf="!reqListDenied.unread">Leido</div>
+                    </td>
+                </ng-container>
+
+                <!-- type Column -->
+                <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef style="color: grey;font-size: 14px;"> Borrar </th>
+                    <td mat-cell *matCellDef="let reqListDenied" style="color: grey; font-size: 12px;">
+                        <button mat-button (click)="eraseNot(reqListDenied.id)" style="background-color: #A60000;color: white;">Borrar</button>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsDenied; sticky: true"></tr>
+                <tr mat-row *matRowDef="let reqListDenied; columns: displayedColumnsDenied;"></tr>
+            </table>
+            <mat-paginator [pageSizeOptions]="[10, 5, 25, 100]" style="width: 80%;position: fixed;bottom: 0px;background: transparent;margin-right: 25px;"></mat-paginator>
+        </div>
+    </div>
+
+    <!-- </div> -->
+</div>
+
+
+
+<mat-menu #menu="matMenu">
+    <!-- <div *ngIf="isLogged && User.role == 'profesor' && User.enabled">
+    <button mat-menu-item routerLink='courses'>Cursos</button>
+  </div> -->
+    <button mat-menu-item (click)="logOutUser()">Cerrar Sesión</button>
+</mat-menu>

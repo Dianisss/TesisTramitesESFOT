@@ -1,0 +1,45 @@
+<div style="font-size: 40px;color: white;font-weight: bolder;text-align: center;padding: 20px;background: #ad2101;margin-bottom: 30px;">
+    <span>INICIO DE SESIÓN</span>
+</div>
+<div style="display: flex; justify-content: center; width: 100%; height: 570px;">
+
+    <div>
+        <!-- Inicio de sesion -->
+        <div style="display: flex;align-items: center;flex-direction: column;justify-content: flex-start;">
+            <!-- formulario -->
+            <form [formGroup]="options" style="display: flex; flex-direction: column; justify-content: flex-start; align-items: center;">
+                <!-- Correo -->
+                <mat-form-field appearance="legacy" color="primary" style="width: 300px;">
+                    <mat-label>Correo</mat-label>
+                    <input matInput formControlName="emailControl">
+                    <mat-error>
+                        <strong>campo requerido.</strong>
+                    </mat-error>
+                </mat-form-field>
+                <!-- Contraseña -->
+                <mat-form-field appearance="legacy" color="primary" style="width: 300px;">
+                    <mat-label>Contraseña</mat-label>
+                    <input matInput type="password" [type]="hide ? 'password' : 'text'" formControlName="passwControl">
+                    <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    <mat-error>
+                        <strong>campo requerido.</strong>
+                    </mat-error>
+                </mat-form-field>
+                <!-- Olvido contraseña -->
+                <a style="text-align: left;margin-right: auto;margin-bottom: 30px;cursor: pointer;" (click)="resetPassword()">Olvidaste tu contraseña?</a>
+                <!-- Registrar -->
+                <a style="text-align: left;margin-right: 10px;" routerLink="/register">CREAR CUENTA NUEVA</a>
+                <!-- Boton -->
+                <button mat-flat-button style="margin-top: 30px;background: black;color: white;font-size: 22px;padding: 10px;" (click)="loginUser()">
+                  <!-- <img style="height: 20px;" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"/> -->
+                  Iniciar Sesión
+              </button>
+                <div *ngIf="showNotAllowed" style="border: 2px solid;border-radius: 15px;margin: 15px;margin-top: 50px;padding: 20px;background: beige;font-weight: bold;">
+                    <span>
+                      Revisa tu correo electrónico
+                  </span>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

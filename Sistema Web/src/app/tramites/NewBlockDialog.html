@@ -1,0 +1,22 @@
+<div style="text-align: center;margin-bottom: 10px;">
+    <span style="padding: 15px;background: #38c8a8;border-radius: 10px;margin-bottom: 10px;color: white;">Nuevo Bloque</span>
+</div>    
+<div>
+    <form style="display: flex;flex-direction: column;align-items: center;align-content: center;">
+        <mat-form-field  style="margin-top: 20px;">
+            <mat-label>Detalle</mat-label>
+            <textarea matInput maxlength="50" [formControl]="NameInput" style="min-height: 150px;max-height: 300px;"></textarea>
+        </mat-form-field>
+        <!-- <mat-form-field  style="margin-top: 20px;display: none;">
+            <mat-label>Descripcion</mat-label>
+            <textarea matInput maxlength="100" [formControl]="DescriptInput" style="min-height: 150px;max-height: 300px;"></textarea>
+        </mat-form-field> -->
+        
+        <div style="display: flex;flex-direction: column;">
+            <!-- Boton -->
+            <button id="save" mat-raised-button style="margin-top: 30px;background: black;color: white;" (click)="createBlock()">
+                Crear Bloque
+            </button>
+        </div>
+    </form>               
+</div>

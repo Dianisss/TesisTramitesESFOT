@@ -1,0 +1,31 @@
+<div style="text-align: center;margin-bottom: 14px;">
+    <span style="padding: 15px;background: #38c8a8;border-radius: 10px;margin-bottom: 14px;color: white;">{{ name }}</span>
+</div>
+<div style="max-height: 85vh;">
+    <mat-horizontal-stepper>
+        <mat-step label="Informacion General">
+            <div id="contenido"></div>
+        </mat-step>
+        <mat-step label="Diagrama">
+            <h1>Diagrama de flujo</h1>
+            <div id="drawflow" style="height: 500px;border: 2px solid;border-radius: 5px;"></div>
+            <div style="display: flex;flex-direction: column;align-items: flex-end;align-content: flex-end;margin-top: -55px;margin-right: 10px;">
+                <button style="width: 25px;z-index: 9999;margin-bottom: 5px;" (click)='zoomIn()'>+</button>
+                <button style="width: 25px;z-index: 9999;" (click)='zoomOut()'>-</button>
+            </div>
+        </mat-step>
+        <mat-step label="Formularios">
+            <h1>Lista de Formularios</h1>
+            <div *ngFor="let doc of links" style="border: 2px solid black;border-radius: 5px;padding: 10px;display: flex;align-content: center;align-items: center;">
+                <span>{{ doc.name }}</span>
+                <div style="flex: 1 0 auto"></div>
+                <button mat-button (click)="openDoc(doc.url)" style="background-color: #e22f2f;color: white;">
+                    <mat-icon>download</mat-icon>
+                </button>
+            </div>
+            <!-- <div *ngFor="let link of links">
+                <a (click)="openDoc(link.url)" style="color: blue;cursor: pointer;text-decoration:underline;">{{link.name}}</a>
+            </div> -->
+        </mat-step>
+    </mat-horizontal-stepper>
+</div>

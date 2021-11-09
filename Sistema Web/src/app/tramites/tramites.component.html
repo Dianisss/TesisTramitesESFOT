@@ -1,0 +1,129 @@
+<div style="display: flex;flex-direction: row;">
+    <!-- Menu -->
+    <div style="width: 290px;height: auto;min-height: 91vh;background: black;">
+        <div style="color: white;margin: 10px;font-weight: bold;font-size: 22px;align-items: center;display: flex;display: flex;width: 230px;">
+            <!-- <mat-icon class="icono" style="color: white;margin: 10px;margin-left: 3px;cursor: pointer;" (click)="navigateWithParams()">arrow_back_ios_new</mat-icon> -->
+            <div style="display: flex;flex-direction: column;align-items: center;width: 100%;">
+
+                <div *ngIf="usrImg == ''">
+                    <button mat-icon-button style="width: auto; height: auto;" [matMenuTriggerFor]="menu">
+                  <img src="../assets/user-palceholder.png" style="width: 35px; height: 35px;padding: 5px;">
+                </button>
+                </div>
+                <div *ngIf="usrImg != ''" style="display: flex;">
+                    <button mat-icon-button tyle="width: 50px; height: 50px;" [matMenuTriggerFor]="menu">
+                  <img [src]="usrImg" style="width: 40px; height: 40px; border-radius: 50%;object-fit: cover;padding: 5px;">
+                </button>
+                </div>
+                <span style="margin-right: 10px;margin-top: 10px;">{{userName}}</span>
+            </div>
+        </div>
+        <mat-divider style="margin-bottom: 5px;margin-top: 5px;background: white;"></mat-divider>
+        <div style="display: flex;flex-direction: column;">
+            <button mat-icon-button routerLink='/profile' style="color: white;"><mat-icon class="icono" style="color: white;margin-right: 10px;margin-left: 10px;">badge</mat-icon>Mi Cuenta</button>
+            <div *ngIf="usrRole == 'admin'">
+                <button mat-icon-button routerLink='/categories' style="color: white;"><mat-icon class="icono" style="color: white;margin-right: 10px;margin-left: 10px;">dashboard_customize</mat-icon>Categorias</button>
+            </div>
+            <div *ngIf="usrRole == 'admin'">
+                <button mat-icon-button routerLink='/tramites' style="color: white;font-weight: bold;font-size: 20px;"><mat-icon class="icono" style="color: white;margin-right: 10px;margin-left: 10px;">grading</mat-icon>Trámites</button>
+            </div>
+            <div *ngIf="usrRole == 'admin'">
+                <button mat-icon-button routerLink='/recomendacion-admin' style="color: white;"><mat-icon class="icono" style="color: white;margin-right: 10px;margin-left: 10px;">wechat</mat-icon>Sugerencias</button>
+            </div>
+            <div *ngIf="usrRole == 'admin'">
+                <button mat-icon-button routerLink='/notifications' style="color: white;"><mat-icon class="icono" style="color: white;margin-right: 10px;margin-left: 10px;">notifications</mat-icon>Notificaciones</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- tramites -->
+    <div style="width: 100%;">
+        <div style="font-size: 20px;color: white;font-weight: bolder;padding: 10px;background: #ad2101;margin-bottom: 30px;">
+            <span>Lista de Trámites</span>
+        </div>
+        <!-- <mat-form-field appearance="fill" style="width: 100%;">
+            <mat-label>Elija una categoria</mat-label>
+            <mat-select [formControl]='selection' (selectionChange)="changeSel()">
+                <div *ngFor="let opt of Categories">
+                    <mat-option [value]="opt">{{ opt.name }}</mat-option>
+                </div>
+            </mat-select>
+        </mat-form-field> -->
+        <!-- se muestran las categorias como cartas -->
+        <div *ngIf="selected == ''">
+            <div style="width: 90%;font-size: 15px;font-weight: bold;padding: 10px;">
+                <span>Este módulo te permite agregar trámites a una categoría</span>
+            </div>
+            <div style="border: 2px solid;padding: 5px;border-radius: 10px;margin-top: 5px;">
+                <span>Buscar: </span>
+                <input type="text" [(ngModel)]="filterSearch" (ngModelChange)="searchData($event)" />
+            </div>
+            <div style="display: flex;flex-direction: row;flex-wrap: wrap;justify-content: space-evenly;gap: 5px;padding: 10px;margin-top: 20px">
+                <div *ngFor="let cat of filteredCategories">
+                    <div style="background: royalblue;padding: 10px;display: flex;flex-direction: column;justify-content: space-between;align-items: center;align-content: center;font-weight: bold;cursor: pointer;" (click)="changeCat(cat)">
+                        <!-- <mat-icon mat-icon style="font-size: 60px; width: 60px; height: 60px;">language</mat-icon> -->
+                        <img [src]="cat.cover" style="width: 220px;height: 150px;">
+                        <p>{{cat.name}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- cuando ya este seleccionada una categoria -->
+        <div *ngIf='selected != ""'>
+            <button mat-button (click)="selected = ''" style="background-color: #A60000;color: white;width: 100%;">
+                <mat-icon class="icono" style="color: white;margin: 10px;margin-left: 3px;cursor: pointer;" (click)="catSelected = 'initial'">arrow_back_ios_new</mat-icon>
+                Volver
+            </button>
+            <div style="width: 90%;font-size: 15px;font-weight: bold;padding: 10px;">
+                <span>Este módulo te permite agregar trámites a una subcategoría</span>
+            </div>
+            <mat-accordion class="example-headers-align" multi>
+                <div *ngFor="let subcat of selected.subcats">
+                    <mat-expansion-panel>
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                {{ subcat.name }}
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+
+                        <div *ngFor="let tramite of subcat.temas">
+                            <div style="display: flex;padding: 20px;margin: 10px;border: 2px solid black;border-radius: 5px;">
+                                <span>
+                        {{ tramite.name}}
+                      </span>
+                                <div style="flex: 1 0 auto"></div>
+                                <div *ngIf="tramite.visible" style="display: flex;">
+                                    <buton (click)="disableTramite(tramite, subcat, selected)" style="color:white; background: #56687e;width: 80px;height: 20px;text-align: center;border-radius: 5px;padding: 5px;cursor: pointer;margin-right: 20px;">Deshabilitar</buton>
+                                </div>
+                                <div *ngIf="!tramite.visible" style="display: flex;">
+                                    <buton (click)="enableTramite(tramite, subcat, selected)" style="color:white; background: rgb(105, 157, 97);width: 65px;height: 20px;text-align: center;border-radius: 5px;padding: 5px;cursor: pointer;margin-right: 20px;">Habilitar</buton>
+                                </div>
+                                <buton (click)="editTramite(subcat, selected, tramite)" style="color:white; background: #001F3E;width: 35px;height: 20px;text-align: center;border-radius: 5px;padding: 5px;cursor: pointer;">Editar</buton>
+                                <buton (click)="openDelete(tramite, subcat, selected)" style="color:white; background: red;width: 50px;height: 20px;text-align: center;border-radius: 5px;padding: 5px;cursor: pointer;">Eliminar</buton>
+                                <buton (click)="viewTramite(tramite)" style="color:white; background: #003e23;width: 35px;height: 20px;text-align: center;border-radius: 5px;padding: 5px;cursor: pointer;">Ver</buton>
+                            </div>
+
+                        </div>
+
+                        <mat-action-row>
+                            <button mat-button (click)="registerNewTramite(subcat, selected)" style="background-color: #A40000;color: white;">
+                    <mat-icon>add</mat-icon>
+                    Agregar nuevo trámite
+                  </button>
+                        </mat-action-row>
+
+                    </mat-expansion-panel>
+                </div>
+            </mat-accordion>
+        </div>
+
+    </div>
+</div>
+
+<mat-menu #menu="matMenu">
+    <!-- <div *ngIf="isLogged && User.role == 'profesor' && User.enabled">
+      <button mat-menu-item routerLink='courses'>Cursos</button>
+    </div> -->
+    <button mat-menu-item (click)="logOutUser()">Cerrar Sesion</button>
+</mat-menu>

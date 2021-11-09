@@ -1,0 +1,232 @@
+<link rel="stylesheet" href="https://unpkg.com/drawflow@0.0.45/dist/drawflow.min.css" />
+
+<div *ngIf="process=='new'">
+    <div style="text-align: center;margin-bottom: 14px;">
+        <span style="padding: 15px;background: #38c8a8;border-radius: 10px;margin-bottom: 14px;color: white;">Nuevo Trámite</span>
+    </div>
+    <div style="max-height: 85vh;">
+        <form style="display: flex;flex-direction: column;align-items: center;align-content: center;">
+            <mat-horizontal-stepper>
+                <mat-step label="Tramite">
+                    <div style="display: flex;flex-direction: column;">
+                        <mat-form-field style="margin-top: 20px;">
+                            <mat-label>Nombre</mat-label>
+                            <input matInput [formControl]="NameInput">
+                        </mat-form-field>
+                    </div>
+                    <div>
+                        <button mat-button matStepperNext style="background: lightgreen;margin-top: 10px;">Siguiente</button>
+                    </div>
+                </mat-step>
+                <mat-step label="Documento">
+                    <div style="display: flex;flex-direction: column;">
+                        <ejs-richtexteditor id='defaultRTE' [toolbarSettings]='tools' [(value)]='textValue'>
+                        </ejs-richtexteditor>
+                        <!-- Select imagen -->
+                        <!-- <input #file type="file" [hidden]="true" accept=".pdf" (change)="detectFiles($event)">
+                        <button mat-button #upload onclick="return false" (click)="file.click()" style="background: #a00;color:white;">Elegir Documento</button>
+                        <div *ngIf="uploading">
+                            <mat-spinner></mat-spinner>
+                        </div> -->
+                    </div>
+                    <div>
+                        <button mat-button matStepperPrevious style="background: brown;color: white;margin-right: 10px;margin-top: 10px;">Atras</button>
+                        <button mat-button matStepperNext style="background: lightgreen;margin-top: 10px;">Siguiente</button>
+                    </div>
+                </mat-step>
+                <mat-step label="Diagrama">
+                    <div style="display: flex;justify-content: space-around;align-items: center;padding: 5px;">
+                        <button style="z-index: 9999;background: #38C8A8;border-radius: 10px;padding: 6px;" (click)='createStartBlock()'>Bloque Inicial</button>
+                        <button style="z-index: 9999;background: #38C8A8;border-radius: 10px;padding: 6px;" (click)='createMiddleBlock()'>Bloque Central</button>
+                        <button style="z-index: 9999;background: #38C8A8;border-radius: 10px;padding: 6px;" (click)='createEndBlock()'>Bloque Final</button>
+                    </div>
+                    <div id="drawflow" style="height: 500px;border: 2px solid;border-radius: 5px;background-size: 40px 40px;
+                    background-image: linear-gradient(to right, grey 1px, transparent 1px), linear-gradient(to bottom, grey 1px, transparent 1px);"></div>
+                    <div style="display: flex;flex-direction: column;align-items: flex-end;align-content: flex-end;margin-top: -55px;margin-right: 10px;">
+                        <button style="width: 25px;z-index: 9999;margin-bottom: 5px;" (click)='zoomIn()'>+</button>
+                        <button style="width: 25px;z-index: 9999;" (click)='zoomOut()'>-</button>
+                    </div>
+                    <div>
+                        <button mat-button matStepperPrevious style="background: brown;color: white;margin-right: 10px;margin-top: 10px;">Atras</button>
+                        <button mat-button matStepperNext style="background: lightgreen;margin-top: 10px;">Siguiente</button>
+                    </div>
+                </mat-step>
+                <mat-step label="Formularios">
+                    <div>
+                        <!-- Select File -->
+
+                        <input #file type="file" [hidden]="true" accept="application/msword, application/pdf" (change)="detectFiles($event)">
+                        <button mat-button #upload onclick="return false" (click)="file.click()" style="background: #a00;color:white;">Elegir Documento</button>
+                        <div *ngFor="let doc of uploadLink" style="border: 2px solid black;border-radius: 5px;padding: 10px;display: flex;align-content: center;align-items: center;">
+                            <span>{{ doc.name }}</span>
+                            <div style="flex: 1 0 auto"></div>
+                            <button mat-button (click)="deleteElement(doc.url)" style="background-color: #e22f2f;color: white;">
+                                <mat-icon>delete_forever</mat-icon>
+                            </button>
+                        </div>
+                        <div *ngIf="uploading" style="display: flex; justify-content: center; align-items: center;">
+                            <mat-spinner diameter="30"></mat-spinner>
+                        </div>
+                    </div>
+                    <div>
+                        <button mat-button matStepperPrevious style="background: brown;color: white;margin-right: 10px;margin-top: 10px;">Atras</button>
+                        <button mat-button matStepperNext style="background: lightgreen;margin-top: 10px;">Siguiente</button>
+                    </div>
+                </mat-step>
+                <mat-step label="Confirmar">
+                    <div>
+                        <span>
+                          <strong>Importante:</strong>
+                      </span>
+                        <span>
+                          Verifique que toda la informacion es correcta antes de publicar.
+                      </span>
+                    </div>
+                    <!-- Boton -->
+                    <button id="save" mat-raised-button color="primary" style="margin-top: 30px;" (click)="saveAllData()"> <!--(click)="createLectura()"-->
+                    Registrar Tramite
+                    </button>
+                    <div>
+                        <button mat-button matStepperPrevious style="background: brown;color: white;margin-right: 10px;margin-top: 10px;">Atras</button>
+                    </div>
+                </mat-step>
+            </mat-horizontal-stepper>
+            <!-- <div *ngIf="uploadLink != ''" style="margin-top: 10px">
+                <img [src]='uploadLink' style="width: 150px;height: 90px;border-radius: 10px;object-fit: cover;">
+            </div> -->
+            <!-- <mat-form-field  style="margin-top: 20px;">
+                <mat-label>Descripcion</mat-label>
+                <textarea matInput maxlength="100" [formControl]="DescriptInput" style="min-height: 150px;max-height: 300px;"></textarea>
+            </mat-form-field>             -->
+            <!-- <ckeditor [editor]="Editor" data="<p>Hello, world!</p>" [config]="{ toolbar: [ 'heading', '|', 'bold', 'italic','bulletedList', 'numberedList' ] }" style="width: 300px;height: 300px;"></ckeditor> -->
+
+            <div style="display: flex;flex-direction: column;">
+                <!-- Select archivo -->
+                <!-- <input #file type="file" [hidden]="true" accept="*" (change)="detectFiles($event)">
+                <button mat-button #upload onclick="return false" (click)="file.click()" style="background: #a00;color:white">Elegir Documento</button>
+                <div *ngIf="uploading">
+                    <mat-spinner></mat-spinner>
+                </div> -->
+                <!-- Boton -->
+                <!-- <button id="save" mat-raised-button color="primary" style="margin-top: 30px;" (click)="createCat()">
+                    Registrar Trámite
+                </button> -->
+            </div>
+        </form>
+    </div>
+</div>
+<div *ngIf="process=='edit'">
+    <div style="text-align: center;margin-bottom: 14px;">
+        <span style="padding: 15px;background: #38c8a8;border-radius: 10px;margin-bottom: 14px;color: white;">Editar Trámite</span>
+    </div>
+    <div style="max-height: 85vh;">
+        <form style="display: flex;flex-direction: column;align-items: center;align-content: center;">
+            <mat-horizontal-stepper>
+                <mat-step label="Tramite">
+                    <div style="display: flex;flex-direction: column;">
+                        <mat-form-field style="margin-top: 20px;">
+                            <mat-label>Nombre</mat-label>
+                            <input matInput [formControl]="NameInput">
+                        </mat-form-field>
+                    </div>
+                    <div>
+                        <button mat-button matStepperNext style="background: lightgreen;margin-top: 10px;">Siguiente</button>
+                    </div>
+                </mat-step>
+                <mat-step label="Documento">
+                    <div style="display: flex;flex-direction: column;">
+                        <ejs-richtexteditor id='defaultRTE' [toolbarSettings]='tools' [(value)]='textValue'>
+                        </ejs-richtexteditor>
+                        <!-- Select imagen -->
+                        <!-- <input #file type="file" [hidden]="true" accept=".pdf" (change)="detectFiles($event)">
+                        <button mat-button #upload onclick="return false" (click)="file.click()" style="background: #a00;color:white;">Elegir Documento</button>
+                        <div *ngIf="uploading">
+                            <mat-spinner></mat-spinner>
+                        </div> -->
+                    </div>
+                    <div>
+                        <button mat-button matStepperPrevious style="background: brown;color: white;margin-right: 10px;margin-top: 10px;">Atras</button>
+                        <button mat-button matStepperNext style="background: lightgreen;margin-top: 10px;">Siguiente</button>
+                    </div>
+                </mat-step>
+                <mat-step label="Diagrama">
+                    <div style="display: flex;justify-content: space-around;align-items: center;padding: 5px;">
+                        <button style="z-index: 9999;background: #38C8A8;border-radius: 10px;padding: 6px;" (click)='createStartBlock()'>Bloque Inicial</button>
+                        <button style="z-index: 9999;background: #38C8A8;border-radius: 10px;padding: 6px;" (click)='createMiddleBlock()'>Bloque Central</button>
+                        <button style="z-index: 9999;background: #38C8A8;border-radius: 10px;padding: 6px;" (click)='createEndBlock()'>Bloque Final</button>
+                    </div>
+                    <div id="drawflow" style="height: 500px;border: 2px solid;border-radius: 5px;background-size: 40px 40px;
+                    background-image: linear-gradient(to right, grey 1px, transparent 1px), linear-gradient(to bottom, grey 1px, transparent 1px);"></div>
+                    <div style="display: flex;flex-direction: column;align-items: flex-end;align-content: flex-end;margin-top: -55px;margin-right: 10px;">
+                        <button style="width: 25px;z-index: 9999;margin-bottom: 5px;" (click)='zoomIn()'>+</button>
+                        <button style="width: 25px;z-index: 9999;" (click)='zoomOut()'>-</button>
+                    </div>
+                    <div>
+                        <button mat-button matStepperPrevious style="background: brown;color: white;margin-right: 10px;margin-top: 10px;">Atras</button>
+                        <button mat-button matStepperNext style="background: lightgreen;margin-top: 10px;">Siguiente</button>
+                    </div>
+                </mat-step>
+                <mat-step label="Formularios">
+                    <div>
+                        <!-- Select File -->
+
+                        <input #file type="file" [hidden]="true" accept="application/msword, application/pdf" (change)="detectFiles($event)">
+                        <button mat-button #upload onclick="return false" (click)="file.click()" style="background: #a00;color:white;">Elegir Documento</button>
+                        <div *ngFor="let doc of uploadLink" style="border: 2px solid royalblue;border-radius: 5px;padding: 10px;display: flex;align-content: center;align-items: center;">
+                            <span>{{ doc.name }}</span>
+                            <div style="flex: 1 0 auto"></div>
+                            <button mat-button (click)="deleteElement(doc.url)" style="background-color: #e22f2f;color: white;">
+                                <mat-icon>delete_forever</mat-icon>
+                            </button>
+                        </div>
+                        <div *ngIf="uploading" style="display: flex; justify-content: center; align-items: center;">
+                            <mat-spinner diameter="30"></mat-spinner>
+                        </div>
+                    </div>
+                    <div>
+                        <button mat-button matStepperPrevious style="background: brown;color: white;margin-right: 10px;margin-top: 10px;">Atras</button>
+                        <button mat-button matStepperNext style="background: lightgreen;margin-top: 10px;">Siguiente</button>
+                    </div>
+                </mat-step>
+                <mat-step label="Confirmar">
+                    <div>
+                        <span>
+                          <strong>Importante:</strong>
+                      </span>
+                        <span>
+                          Verifique que toda la informacion es correcta antes de publicar.
+                      </span>
+                    </div>
+                    <!-- Boton -->
+                    <button id="save" mat-raised-button color="primary" style="margin-top: 30px;" (click)="updateAllData()"> <!--(click)="createLectura()"-->
+                    Actualizar Tramite
+                    </button>
+                    <div>
+                        <button mat-button matStepperPrevious style="background: brown;color: white;margin-right: 10px;margin-top: 10px;">Atras</button>
+                    </div>
+                </mat-step>
+            </mat-horizontal-stepper>
+            <!-- <div *ngIf="uploadLink != ''" style="margin-top: 10px">
+                <img [src]='uploadLink' style="width: 150px;height: 90px;border-radius: 10px;object-fit: cover;">
+            </div> -->
+            <!-- <mat-form-field  style="margin-top: 20px;">
+                <mat-label>Descripcion</mat-label>
+                <textarea matInput maxlength="100" [formControl]="DescriptInput" style="min-height: 150px;max-height: 300px;"></textarea>
+            </mat-form-field>             -->
+            <!-- <ckeditor [editor]="Editor" data="<p>Hello, world!</p>" [config]="{ toolbar: [ 'heading', '|', 'bold', 'italic','bulletedList', 'numberedList' ] }" style="width: 300px;height: 300px;"></ckeditor> -->
+
+            <div style="display: flex;flex-direction: column;">
+                <!-- Select archivo -->
+                <!-- <input #file type="file" [hidden]="true" accept="*" (change)="detectFiles($event)">
+                <button mat-button #upload onclick="return false" (click)="file.click()" style="background: #a00;color:white">Elegir Documento</button>
+                <div *ngIf="uploading">
+                    <mat-spinner></mat-spinner>
+                </div> -->
+                <!-- Boton -->
+                <!-- <button id="save" mat-raised-button color="primary" style="margin-top: 30px;" (click)="createCat()">
+                    Registrar Trámite
+                </button> -->
+            </div>
+        </form>
+    </div>
+</div>

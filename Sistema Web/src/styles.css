@@ -1,0 +1,15 @@
+/* You can add global styles to this file, and also import other style files */
+body {
+    margin: 0;
+    padding: 0;
+    /* background-image: url(assets/fondo.jpg); */
+    background-position: center;
+    background-size: cover;
+    background-repeat: repeat;
+    font-family: 'Roboto', sans-serif;
+  } 
+
+  .ck-editor__editable_inline {
+    min-height: 200px;
+    min-width: 400px;
+}

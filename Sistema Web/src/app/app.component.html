@@ -1,0 +1,89 @@
+<mat-toolbar style="position: sticky;z-index: 1000;background-color: black;height: 90px;">
+    <!--color="primary"-->
+    <img src='../assets/logo-EPN-blanco.png' routerLink='home' style="cursor: pointer;height: 80px;">
+    <span style="flex: 1 1 auto;"></span>
+
+    <!--If not logged buttons!-->
+    <div *ngIf="!isLogged">
+        <button *ngIf="router.url == '/home'" style="margin-left: 15px;background: transparent;margin-right: 15px;box-shadow: 0px 0px 59px 4px white;color: white;height: 25px;border: transparent;" routerLink='home'>Inicio</button>
+        <button *ngIf="router.url != '/home'" style="margin-left: 15px;background: transparent;margin-right: 15px;color: white;height: 25px;border: transparent;" routerLink='home'>Inicio</button>
+        <button *ngIf="router.url == '/login' || router.url == '/register'" style="margin-left: 15px;background: transparent;margin-right: 15px;box-shadow: 0px 0px 59px 4px white;color: white;height: 25px;border: transparent;" (click)='navigateWithParams("login")'>Iniciar sesión</button>
+        <button *ngIf="router.url != '/login' && router.url != '/register'" style="margin-left: 15px;background: transparent;margin-right: 15px;color: white;height: 25px;border: transparent;" (click)='navigateWithParams("login")'>Iniciar sesión</button>
+    </div>
+
+    <div *ngIf="isLogged">
+        <button *ngIf="router.url == '/home'" style="margin-left: 15px;background: transparent;margin-right: 15px;box-shadow: 0px 0px 59px 4px white;color: white;height: 25px;border: transparent;" routerLink='home'>Inicio</button>
+        <button *ngIf="router.url != '/home'" style="margin-left: 15px;background: transparent;margin-right: 15px;color: white;height: 25px;border: transparent;" routerLink='home'>Inicio</button>
+        <button *ngIf="router.url == '/categories'" style="margin-left: 15px;background: transparent;margin-right: 15px;box-shadow: 0px 0px 59px 4px white;color: white;height: 25px;border: transparent;" routerLink='categories'>Categorías</button>
+        <button *ngIf="router.url != '/categories'" style="margin-left: 15px;background: transparent;margin-right: 15px;color: white;height: 25px;border: transparent;" routerLink='categories'>Categorías</button>
+    </div>
+
+    <!-- If logged account details-->
+    <div *ngIf="!isMobile">
+        <div *ngIf="router.url == '/home'">
+            <div *ngIf='isLogged' style="display: flex;align-items: center;color: white;">
+                <div *ngIf="User.role == 'admin'" style="padding: 10px;">
+                    <mat-icon [matBadge]="pending" matBadgeColor="warn" style="margin-right: 10px;cursor: pointer;" routerLink='recomendacion-admin'>notifications</mat-icon>
+                </div>
+                <div *ngIf="User.role != 'admin'" style="padding: 10px;">
+                    <mat-icon [matBadge]="pendingUsr" matBadgeColor="warn" style="margin-right: 10px;cursor: pointer;" routerLink='sugerencias'>notifications</mat-icon>
+                </div>
+                <span>{{ User.name }}</span>
+                <div *ngIf="usrImg == ''">
+                    <button mat-icon-button style="width: auto; height: auto;" [matMenuTriggerFor]="menu">
+            <img src="../assets/user-palceholder.png" style="width: 35px; height: 35px;padding: 5px;">
+          </button>
+                </div>
+                <div *ngIf="usrImg != ''" style="display: flex;">
+                    <button mat-icon-button tyle="width: 50px; height: 50px;" [matMenuTriggerFor]="menu">
+            <img [src]="usrImg" style="width: 40px; height: 40px; border-radius: 50%;object-fit: cover;padding: 5px;">
+          </button>
+                </div>
+
+            </div>
+        </div>
+        <div *ngIf="router.url != '/home' " style="display: flex;color: white;">
+            <div *ngIf="isLogged" style="display: flex;align-items: center;color: white;">
+                <div *ngIf="User.role == 'admin'" style="padding: 10px;">
+                    <mat-icon [matBadge]="pending" matBadgeColor="warn" style="margin-right: 10px;cursor: pointer;" routerLink='recomendacion-admin'>notifications</mat-icon>
+                </div>
+                <div *ngIf="User.role != 'admin'" style="padding: 10px;">
+                    <mat-icon [matBadge]="pendingUsr" matBadgeColor="warn" style="margin-right: 10px;cursor: pointer;" routerLink='sugerencias'>notifications</mat-icon>
+                </div>
+                <button mat-icon-button style="width: auto; height: auto;color: white;" (click)="logOutUser()">Cerrar Sesión</button>
+            </div>
+        </div>
+
+    </div>
+    <div *ngIf="isMobile">
+        <div *ngIf='isLogged' style="display: flex;align-items: center;">
+            <div *ngIf="usrImg == ''">
+                <button mat-icon-button style="width: auto; height: auto;" [matMenuTriggerFor]="menu">
+          <img src="../assets/user-palceholder.png" style="width: 35px; height: 35px;padding: 5px;">
+        </button>
+            </div>
+            <div *ngIf="usrImg != ''" style="display: flex;">
+                <button mat-icon-button tyle="width: 50px; height: 50px;" [matMenuTriggerFor]="menu">
+          <img [src]="usrImg" style="width: 40px; height: 40px; border-radius: 50%;object-fit: cover;padding: 5px;">
+        </button>
+            </div>
+
+        </div>
+    </div>
+
+
+</mat-toolbar>
+<router-outlet></router-outlet>
+<mat-menu #menu="matMenu">
+    <div *ngIf="isLogged && User.role == 'admin'">
+        <button mat-menu-item routerLink='approval'>Ver Solicitudes</button>
+    </div>
+    <!-- <div *ngIf="isLogged && User.role == 'profesor' && User.enabled">
+    <button mat-menu-item routerLink='courses'>Cursos</button>
+  </div> -->
+    <div *ngIf="isLogged && User.role == 'profesor' && User.enabled">
+        <button mat-menu-item routerLink='dashboard'>Dashboard</button>
+    </div>
+    <button mat-menu-item routerLink='profile'>Mi Cuenta</button>
+    <button mat-menu-item (click)="logOutUser()">Cerrar Sesión</button>
+</mat-menu>

@@ -1,0 +1,275 @@
+<div style="display: flex;flex-direction: row;height: 90vh;">
+    <div style="width: 290px;height: auto;min-height: 91vh;background: black;">
+        <div style="color: white;margin: 10px;font-weight: bold;font-size: 22px;align-items: center;display: flex;display: flex;width: 230px;">
+            <!-- <mat-icon class="icono" style="color: white;margin: 10px;margin-left: 3px;cursor: pointer;" (click)="navigateWithParams()">arrow_back_ios_new</mat-icon> -->
+            <div style="display: flex;flex-direction: column;align-items: center;width: 100%;">
+
+                <div *ngIf="usrImg == ''">
+                    <button mat-icon-button style="width: auto; height: auto;" [matMenuTriggerFor]="menu">
+                <img src="../assets/user-palceholder.png" style="width: 35px; height: 35px;padding: 5px;">
+                </button>
+                </div>
+                <div *ngIf="usrImg != ''" style="display: flex;">
+                    <button mat-icon-button tyle="width: 50px; height: 50px;" [matMenuTriggerFor]="menu">
+                <img [src]="usrImg" style="width: 40px; height: 40px; border-radius: 50%;object-fit: cover;padding: 5px;">
+                </button>
+                </div>
+                <span style="margin-right: 10px;margin-top: 10px;">{{userName}}</span>
+            </div>
+        </div>
+        <mat-divider style="margin-bottom: 5px;margin-top: 5px;background: white;"></mat-divider>
+        <div style="display: flex;flex-direction: column;">
+            <button mat-icon-button routerLink='/profile' style="color: white;"><mat-icon class="icono" style="color: white;margin-right: 10px;margin-left: 10px;">badge</mat-icon>Mi Cuenta</button>
+            <div *ngIf="usrRole != 'admin'">
+                <button mat-icon-button routerLink='/categorias' style="color: white;"><mat-icon class="icono" style="color: white;margin-right: 10px;margin-left: 10px;">dashboard_customize</mat-icon>Categorias</button>
+            </div>
+            <div *ngIf="usrRole == 'admin'">
+                <button mat-icon-button routerLink='/tramites' style="color: white;"><mat-icon class="icono" style="color: white;margin-right: 10px;margin-left: 10px;">grading</mat-icon>Trámites</button>
+            </div>
+            <div *ngIf="usrRole != 'admin'">
+                <button mat-icon-button routerLink='/sugerencias' style="color: white;font-weight: bold;font-size: 20px;"><mat-icon class="icono" style="color: white;margin-right: 10px;margin-left: 10px;">wechat</mat-icon>Sugerencias</button>
+            </div>
+        </div>
+    </div>
+    <!-- para ver todas las categorias -->
+    <div style="display: flex;width: 100%;justify-content: center;align-items: flex-start;">
+        <div *ngIf="view == 'form'" style="width: 100%;">
+            <!-- Inicio de sesion -->
+            <div style="font-size: 20px;color: white;font-weight: bolder;text-align: left;padding: 10px;background: #ad2101;margin-bottom: 30px;">
+                <span>Notificaciones</span>
+            </div>
+            <div style="width: 90%;font-size: 15px;font-weight: bold;padding: 10px;text-align: left;">
+                <span>Este módulo te permite crear una queja, sugerencia, novedad y enviar al administrador</span>
+            </div>
+            <button mat-flat-button style="margin-top: 10px;font-size: 22px;border: 1px solid black;background: royalblue;margin-bottom: 50px;width: 97%;margin-left: 10px;margin-right: 10px;
+            color: white;" (click)="view = 'list'" [matBadge]="nots">
+                Ver Notificaciones
+            </button>
+            <div style="display: flex;align-items: center;flex-direction: column;justify-content: flex-start;">
+                <!-- formulario -->
+                <form [formGroup]="options" style="display: flex; flex-direction: column; justify-content: flex-start; align-items: center;">
+                    <!-- botones superiores -->
+                    <div style="display: flex;justify-content: space-evenly;">
+                        <button id='queja' mat-flat-button style="margin-top: 10px;font-size: 20px;padding: 5px;border: 1px solid black;" (click)="selectCause('queja')">
+                            Queja
+                        </button>
+                        <button id="Sujerencia" mat-flat-button style="margin-top: 10px;font-size: 20px;padding: 5px;border: 1px solid black;" (click)="selectCause('Sujerencia')">
+                            Sugerencia
+                        </button>
+                        <button id='Novedad' mat-flat-button style="margin-top: 10px;font-size: 20px;padding: 5px;border: 1px solid black;" (click)="selectCause('Novedad')">
+                            Novedad
+                        </button>
+                    </div>
+                    <hr style="width: 100%;">
+                    <!-- Titulo -->
+                    <!-- <mat-form-field appearance="legacy" color="primary" style="width: 300px;">
+                        <mat-label>Titulo</mat-label>
+                        <input matInput formControlName="titleControl">
+                        <mat-error>
+                            <strong>campo requerido.</strong>
+                        </mat-error>
+                    </mat-form-field>                       -->
+                    <!-- Razon -->
+                    <!-- <mat-form-field appearance="legacy" color="primary" style="width: 300px;">
+                        <mat-label>Razon</mat-label>
+                        <input matInput formControlName="reasonControl">
+                        <mat-error>
+                            <strong>campo requerido.</strong>
+                        </mat-error>
+                    </mat-form-field> -->
+                    <!-- Desc -->
+                    <mat-form-field appearance="legacy" color="primary" style="width: 300px;">
+                        <mat-label>Descripcion</mat-label>
+                        <!-- <input matInput > -->
+                        <textarea matInput formControlName="descControl" style="min-height: 100px;"></textarea>
+                        <mat-error>
+                            <strong>campo requerido.</strong>
+                        </mat-error>
+                    </mat-form-field>
+
+                    <button mat-raised-button color="primary" style="margin-top: 30px;" (click)='enviar()'>
+                      Enviar
+                  </button>
+                </form>
+            </div>
+        </div>
+        <div *ngIf="view == 'list'" style="width: 100%;">
+            <div style="width: 100%;display: flex;flex-direction: row;justify-content: space-evenly;margin-bottom: 10px;">
+                <button mat-button (click)="view = 'form'" style="background-color: #A60000;color: white;width: 100%;">
+                  <mat-icon class="icono" style="color: white;margin: 10px;margin-left: 3px;cursor: pointer;">arrow_back_ios_new</mat-icon>
+                  Volver
+                </button>
+            </div>
+            <div style="font-size: 20px;color: white;font-weight: bolder;text-align: left;padding: 10px;background: #ad2101;margin-bottom: 30px;">
+                <span>Notificaciones</span>
+            </div>
+            <div style="text-align: left;font-weight: bold;margin-bottom: 15px;">
+                <span>Este módulo te permite observar tus notificaciones y noticias enviadas por el administrador</span>
+            </div>
+            <div style="border: 2px solid;padding: 5px;border-radius: 10px;margin-top: -5px;">
+                <span>Buscar: </span>
+                <input type="text" [(ngModel)]="filterSearch" (ngModelChange)="searchData($event)" />
+            </div>
+            <div style="display: flex;">
+                <div style="width: 50%;">
+                    <div style="margin: 10px;text-align: center;border: 2px solid;border-radius: 10px;padding: 10px;font-weight: bold;background: #a00;">
+                        <span>Notificaciones</span>
+                    </div>
+                    <mat-accordion class="example-headers-align" multi>
+                        <div *ngFor="let not of filteredPending">
+                            <mat-expansion-panel>
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                        <div *ngIf="not.reason != 'Notificacion'">
+                                            Razon: {{not.reason}}
+                                        </div>
+                                        <div *ngIf="not.reason == 'Notificacion'">
+                                            Razon: Notificacion
+                                        </div>
+                                        <div style="flex: 1 0 auto;"></div>
+                                        <div *ngIf="not.reason != 'Notificacion'">
+                                            Estado: {{not.state}}
+                                        </div>
+                                        <div *ngIf="not.reason == 'Notificacion'">
+                                            {{not.type}}
+                                        </div>
+
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+
+                                <div>
+                                    <p><strong>Descripcion:</strong></p>
+                                    <span>
+                                        {{ not.desc }}
+                                    </span>
+                                </div>
+                                <div *ngIf="not.reason != 'Notificacion'">
+                                    <p><strong>Motivo:</strong></p>
+                                    <span>
+                                        {{ not.stateReason }}
+                                    </span>
+                                </div>
+
+                                <mat-action-row>
+                                    <div *ngIf="not.reason != 'Notificacion'">
+                                        <button mat-button (click)="markRead(not.id)">Marcar como leido</button>
+                                    </div>
+                                    <div *ngIf="not.reason == 'Notificacion'">
+                                        <button mat-button (click)="markReadAlert(not.id)">Marcar como leido</button>
+                                    </div>
+
+                                </mat-action-row>
+
+                            </mat-expansion-panel>
+                        </div>
+                    </mat-accordion>
+                </div>
+                <div style="width: 50%;">
+                    <div style="margin: 10px;text-align: center;border: 2px solid;border-radius: 10px;padding: 10px;font-weight: bold;background: #001F3E">
+                        <span>Noticias</span>
+                    </div>
+                    <mat-accordion class="example-headers-align" multi>
+                        <div *ngFor="let not of filteredPendingNots">
+                            <mat-expansion-panel>
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                        <div *ngIf="not.reason != 'Notificacion'">
+                                            Razon: {{not.reason}}
+                                        </div>
+                                        <div *ngIf="not.reason == 'Notificacion'">
+                                            Razon: Notificacion
+                                        </div>
+                                        <div style="flex: 1 0 auto;"></div>
+                                        <div *ngIf="not.reason != 'Notificacion'">
+                                            Estado: {{not.state}}
+                                        </div>
+
+                                        <div *ngIf="not.reason == 'Notificacion'">
+                                            {{not.type}}
+                                        </div>
+
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+
+                                <div>
+                                    <p><strong>Descripcion:</strong></p>
+                                    <span>
+                                        {{ not.desc }}
+                                    </span>
+                                </div>
+                                <div *ngIf="not.reason != 'Notificacion'">
+                                    <p><strong>Motivo:</strong></p>
+                                    <span>
+                                      {{ not.stateReason }}
+                                  </span>
+                                </div>
+
+                                <mat-action-row>
+                                    <div *ngIf="not.reason != 'Notificacion'">
+                                        <button mat-button (click)="markRead(not.id)">Marcar como leido</button>
+                                    </div>
+                                    <div *ngIf="not.reason == 'Notificacion'">
+                                        <button mat-button (click)="markReadAlert(not.id)">Marcar como leido</button>
+                                    </div>
+
+                                </mat-action-row>
+
+                            </mat-expansion-panel>
+                        </div>
+                    </mat-accordion>
+                </div>
+            </div>
+
+            <mat-accordion class="example-headers-align" multi>
+
+
+                <div style="margin: 10px;text-align: center;border: 2px solid;border-radius: 10px;padding: 10px;font-weight: bold;background: #34b834;">
+                    <span>LEIDOS</span>
+                </div>
+                <div *ngFor="let not of filteredMarked">
+                    <mat-expansion-panel>
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                <div *ngIf="not.reason != 'Notificacion'">
+                                    Razon: {{not.reason}}
+                                </div>
+                                <div *ngIf="not.reason == 'Notificacion'">
+                                    Razon: Notificacion
+                                </div>
+                                <div style="flex: 1 0 auto;"></div>
+                                <div *ngIf="not.reason != 'Notificacion'">
+                                    Estado: {{not.state}}
+                                </div>
+                                <div *ngIf="not.reason == 'Notificacion'">
+                                    {{not.type}}
+                                </div>
+
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+
+                        <div>
+                            <p><strong>Descripcion:</strong></p>
+                            <span>
+                                {{ not.desc }}
+                            </span>
+                        </div>
+                        <div *ngIf="not.reason != 'Notificacion'">
+                            <p><strong>Motivo:</strong></p>
+                            <span>
+                                {{ not.stateReason }}
+                            </span>
+                        </div>
+                    </mat-expansion-panel>
+                </div>
+            </mat-accordion>
+        </div>
+
+    </div>
+</div>
+
+<mat-menu #menu="matMenu">
+    <!-- <div *ngIf="isLogged && User.role == 'profesor' && User.enabled">
+      <button mat-menu-item routerLink='courses'>Cursos</button>
+    </div> -->
+    <button mat-menu-item (click)="logOutUser()">Cerrar Sesión</button>
+</mat-menu>
