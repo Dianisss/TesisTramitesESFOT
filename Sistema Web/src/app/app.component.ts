@@ -23,7 +23,7 @@ export class AppComponent implements OnInit {
   constructor(private router: Router, private authService: AuthServiceService, private observer: ViewobserverService){}
 
   ngOnInit(){
-    this.router.navigateByUrl('login');
+    this.router.navigateByUrl('home');
     this.getCurrentUser();
 
     //observer to get view size
@@ -94,6 +94,7 @@ export class AppComponent implements OnInit {
                     {
                       this.pendingUsr+= 1;
                     }
+                    console.log('se ejecuta')
                   }
                   this.authService.listAlerts().subscribe(result =>{
                     for(let s in result)
@@ -109,6 +110,7 @@ export class AppComponent implements OnInit {
                       }
                       console.log(this.pendingUsr)
                     }
+                    this.pendingUsr-= 1;
                     obsUsr.unsubscribe();
                   })
                 });//end nots

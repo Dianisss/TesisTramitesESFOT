@@ -47,6 +47,10 @@ export class MyprofileComponent implements OnInit {
   constructor(private storage: AngularFireStorage, private AppC: AppComponent, private userService: AuthServiceService, private snack: MatSnackBar, private router: Router) { }
 
   ngOnInit(): void {
+    if(!this.AppC.isLogged)
+    {
+      this.router.navigateByUrl('login');
+    }
     this.User = this.AppC.User
     this.options.get('namesControl').setValue(this.User.name);
     this.options.get('lastnamesControl').setValue(this.User.lastname);
@@ -74,7 +78,7 @@ export class MyprofileComponent implements OnInit {
     let val2 = this.options.get('lastnamesControl').value.match(/\d+/g);
     if(val1 != null || val2 != null)
     {
-      this.snack.open('No se permiten numeros en el nombre', '', {duration: 2000})
+      this.snack.open('No se permiten números en el nombre', '', {duration: 2000})
       return;
     }
     else

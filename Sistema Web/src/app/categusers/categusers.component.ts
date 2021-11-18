@@ -22,7 +22,11 @@ export class CategusersComponent implements OnInit {
   selected = '';
   constructor(public dialog: MatDialog,private snack: MatSnackBar, private auth: AuthServiceService, private router: Router, private Appc: AppComponent) { }
 
-  ngOnInit(): void {
+  ngOnInit(): void {    
+    if(!this.Appc.isLogged)
+    {
+      this.router.navigateByUrl('login');
+    }
     this.usrImg = this.Appc.usrImg;
     this.userName = this.Appc.User.name;
     this.usrRole = this.Appc.User.role;

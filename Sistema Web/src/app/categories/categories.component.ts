@@ -39,6 +39,7 @@ export class CategoriesComponent implements OnInit {
   usrRole;
   usrUID;
   catSelected = 'initial';
+  form: any;
   constructor(public dialog: MatDialog,private snack: MatSnackBar, private auth: AuthServiceService, private router: Router, private Appc: AppComponent) { }
 
   ngOnInit(): void {
@@ -46,7 +47,7 @@ export class CategoriesComponent implements OnInit {
     this.userName = this.Appc.User.name;
     this.usrRole = this.Appc.User.role;
     let sub = this.auth.listCats().subscribe(result =>{
-      this.Categories = result;      
+      this.Categories = result;
       this.filteredCategories = this.Categories;
       console.log(this.Categories)
     })
@@ -60,7 +61,7 @@ export class CategoriesComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result =>{
       if(result == 'created'){
-        
+
         this.snack.open('Categoria creada con exito', '', {duration: 2000})
       }
     })
@@ -74,8 +75,8 @@ export class CategoriesComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result =>{
       if(result == 'created'){
-        
-        this.snack.open('Sub-Categoria creada con exito', '', {duration: 2000})
+
+        this.snack.open('Subcategoria creada con éxito', '', {duration: 2000})
       }
     })
   }
@@ -92,7 +93,7 @@ export class CategoriesComponent implements OnInit {
         this.snack.open('Categoría actualizada con éxito', '', {duration: 2000})
 
       }
-    })   
+    })
   }
 
   editSubCategory(selected, id, name){
@@ -103,10 +104,10 @@ export class CategoriesComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result =>{
       if(result == 'updated'){
-        this.snack.open('Sub-Categoría actualizada con éxito', '', {duration: 2000})
+        this.snack.open('Subcategoría actualizada con éxito', '', {duration: 2000})
 
       }
-    })   
+    })
   }
 
   changeCat(cat){
@@ -121,13 +122,13 @@ export class CategoriesComponent implements OnInit {
       }
       else
       {
-        (document.getElementById('save') as HTMLButtonElement).disabled = false;        
+        (document.getElementById('save') as HTMLButtonElement).disabled = false;
         (document.getElementById('save') as HTMLButtonElement).style.background = 'red';
       }
 
-      
+
     })
-   
+
   }
 
   deleteConfirm(categoryID){
@@ -178,14 +179,14 @@ export class CategoriesComponent implements OnInit {
         {
           this.auth.deleteCategory(id);
           this.catSelected = 'initial';
-        }     
+        }
         else
         {
           this.snack.open('No tiene permisos para eliminar esta categoria', '', {duration: 2000});
-        }   
+        }
       }
     }
-    
+
   }
 
   logOutUser()
@@ -194,7 +195,7 @@ export class CategoriesComponent implements OnInit {
   }
 
   searchData(searchValue: any) {
-    this.filteredCategories = this.Categories.filter((item: any) => {      
+    this.filteredCategories = this.Categories.filter((item: any) => {
       return item.name.toLowerCase().includes(searchValue.toLowerCase())
     });
   }
@@ -203,7 +204,7 @@ export class CategoriesComponent implements OnInit {
     await new Promise<void>(resolve => setTimeout(()=>resolve(), ms)).then(()=>console.log("delay ", ms));
   }
 
-  
+
 
 }
 
@@ -263,7 +264,7 @@ export class NewCategoryDialog implements OnInit{
         this.uploadLink = result;
       })
     });
-    
+
   }
 
   createCat(){
@@ -289,12 +290,12 @@ export class NewCategoryDialog implements OnInit{
         //this.auth.createAlert('Nueva categoria: "'+name+'" esta disponible');
         this.dialogRef.close('created');
       }
-      
+
     }
     else{
       this.snack.open('Debe seleccionar un cover/nombre.', '', {duration: 2000})
     }
-    
+
   }
 
   updateCat(){
@@ -311,7 +312,7 @@ export class NewCategoryDialog implements OnInit{
     }
     if(copied)
     {
-      this.snack.open('La categoria ya existe.', '', {duration: 2000})
+      this.snack.open('La categoría ya existe.', '', {duration: 2000})
     }
     else
     {
@@ -325,17 +326,17 @@ export class NewCategoryDialog implements OnInit{
         {
           let sub = this.auth.updateCategory(id, name, desc, this.uploadLink);
           this.dialogRef.close('updated');
-        }        
-      } 
+        }
+      }
       else
       {
         this.snack.open('El nombre no puede estar en blanco.', '', {duration: 2000})
       }
-      
+
     }
-    
-  
-    
+
+
+
   }
 
 }
@@ -395,18 +396,32 @@ export class NewSubCategoryDialog implements OnInit{
       }
       else
       {
-        this.cats.push({name: name, temas: []})
-        let sub = this.auth.updateSubCategory(this.uid, this.cats);
-        // this.auth.createAlert('Nueva Sub-categoria: "'+name+'" esta disponible.');
-        //let sub = this.auth.createCategory(name, desc, this.uploadLink);
-        this.dialogRef.close('created');
+        if(name !='')
+        {
+          if(!name.replace(/\s/g, '').length )
+          {
+            this.snack.open('El nombre no puede estar en blanco.', '', {duration: 2000})
+          }
+          else
+          {
+            this.cats.push({name: name, temas: []})
+            let sub = this.auth.updateSubCategory(this.uid, this.cats);
+            // this.auth.createAlert('Nueva Sub-categoria: "'+name+'" esta disponible.');
+            //let sub = this.auth.createCategory(name, desc, this.uploadLink);
+            this.dialogRef.close('created');
+          }
+        }
+        else
+        {
+          this.snack.open('El nombre no puede estar en blanco.', '', {duration: 2000});
+        }
       }
-      
+
     }
     else{
       this.snack.open('Debe seleccionar un nombre.', '', {duration: 2000})
     }
-    
+
   }
 
   updateCat(){
@@ -422,24 +437,38 @@ export class NewSubCategoryDialog implements OnInit{
     }
     if(copied)
     {
-      this.snack.open('La sub-categoria ya existe.', '', {duration: 2000})
+      this.snack.open('La subcategoría ya existe.', '', {duration: 2000})
     }
     else
     {
-      //let sub = this.auth.updateCategory(id, name, desc, this.uploadLink);
-      for(let s in this.cats)
+      if(name != '')
       {
-        if(this.cats[s].name == this.data['data']['name'])
+        if(!name.replace(/\s/g, '').length )
         {
-          this.cats[s].name = name;
+          this.snack.open('El nombre no puede estar en blanco.', '', {duration: 2000})
+        }
+        else
+        {
+          //let sub = this.auth.updateCategory(id, name, desc, this.uploadLink);
+          for(let s in this.cats)
+          {
+            if(this.cats[s].name == this.data['data']['name'])
+            {
+              this.cats[s].name = name;
+            }
+          }
+          this.auth.updateSubCategory(id, this.cats)
+          this.dialogRef.close('updated');
         }
       }
-      this.auth.updateSubCategory(id, this.cats)
-      this.dialogRef.close('updated');
+      else
+      {
+        this.snack.open('El nombre no puede estar en blanco.', '', {duration: 2000})
+      }
     }
-    
-  
-    
+
+
+
   }
 
 }

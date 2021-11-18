@@ -157,7 +157,7 @@ export class LoginComponent implements OnInit {
                 this.showNotAllowed = false;
                 subAuth.unsubscribe();
                 subAuth2.unsubscribe();
-                this.route.navigateByUrl('home');
+                window.location.reload();
               }
               else
               {

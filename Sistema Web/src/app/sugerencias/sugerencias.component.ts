@@ -39,6 +39,11 @@ export class SugerenciasComponent implements OnInit {
   constructor(private snack: MatSnackBar, private auth: AuthServiceService, private router: Router, private AppC: AppComponent) { }
 
   ngOnInit(): void {
+    
+    if(!this.AppC.isLogged)
+    {
+      this.router.navigateByUrl('login');
+    }
     this.usrImg = this.AppC.usrImg;
     this.userName = this.AppC.User.name;
     //this.usrRole = this.AppC.User.role;
@@ -130,6 +135,14 @@ export class SugerenciasComponent implements OnInit {
         this.marked.push(this.pending[s]);
         this.pending.splice(parseInt(s),1);
       }
+    }    
+    for(let s in this.filteredPending)
+    {
+      if(this.filteredPending[s].id == id)
+      {
+        this.filteredMarked.push(this.filteredPending[s]);
+        this.filteredPending.splice(parseInt(s),1);
+      }
     }
     this.searchData('');
     this.auth.markReadSuggets(id);
@@ -139,15 +152,25 @@ export class SugerenciasComponent implements OnInit {
 
   markReadAlert(id)
   {
-    for(let s in this.pending)
+    // for(let s in this.pending)
+    // {
+    //   if(this.pending[s].id == id)
+    //   {
+    //     this.marked.push(this.pending[s]);
+    //     this.pending.splice(parseInt(s),1);
+    //   }
+    // }
+    
+    for(let s in this.filteredPendingNots)
     {
-      if(this.pending[s].id == id)
+      if(this.filteredPendingNots[s].id == id)
       {
-        this.marked.push(this.pending[s]);
-        this.pending.splice(parseInt(s),1);
+        this.filteredMarked.push(this.filteredPendingNots[s]);
+        this.filteredPendingNots.splice(parseInt(s),1);
       }
     }
-    this.searchData('');
+    console.log(this.filteredMarked);
+    //this.searchData('');
     this.vistos.push(id);
     this.auth.markReadAlert(this.vistos, this.AppC.User.uid);
     this.nots-= 1;
@@ -156,23 +179,39 @@ export class SugerenciasComponent implements OnInit {
 
   enviar()
   {
+    let desc = this.options.get('descControl').value
     if(this.cause == '')
     {
       this.snack.open('Debe seleccionar una cuasa', '', {duration: 2500})
     }
     else
     {
-      this.auth.createSuggest(this.options.get('titleControl').value, this.options.get('descControl').value, this.cause, this.AppC.User.uid);
-      this.snack.open('Enviado!', '', {duration: 2500});
-      this.options.get('titleControl').setValue('');
-      this.options.get('descControl').setValue('');
-      this.cause = '';
-      let btn1 = (document.getElementById('queja') as HTMLButtonElement);
-      let btn2 = (document.getElementById('Sujerencia') as HTMLButtonElement);
-      let btn3 = (document.getElementById('Novedad') as HTMLButtonElement);
-      btn1.style.background = 'transparent'
-      btn2.style.background = 'transparent'
-      btn3.style.background = 'transparent'
+      if(desc != '')
+      {
+        if(!desc.replace(/\s/g, '').length )
+        {
+          this.snack.open('El contenido no puede estar en blanco.', '', {duration: 2000})
+        }
+        else
+        {
+          this.auth.createSuggest(this.options.get('titleControl').value, this.options.get('descControl').value, this.cause, this.AppC.User.uid);
+          this.snack.open('Enviado!', '', {duration: 2500});
+          this.options.get('titleControl').setValue('');
+          this.options.get('descControl').setValue('');
+          this.cause = '';
+          let btn1 = (document.getElementById('queja') as HTMLButtonElement);
+          let btn2 = (document.getElementById('Sujerencia') as HTMLButtonElement);
+          let btn3 = (document.getElementById('Novedad') as HTMLButtonElement);
+          btn1.style.background = 'transparent'
+          btn2.style.background = 'transparent'
+          btn3.style.background = 'transparent'
+        }
+      }
+      else
+      {
+        this.snack.open('El contenido no puede estar en blanco.', '', {duration: 2000})
+      }
+      
     }
 
   }

@@ -38,6 +38,11 @@ export class SugestionsadminComponent implements OnInit {
   constructor(private AppC: AppComponent, private userService: AuthServiceService, private snack: MatSnackBar, private router: Router, private dialog: MatDialog) { }
 
   ngOnInit(): void {
+    
+    if(!this.AppC.isLogged)
+    {
+      this.router.navigateByUrl('login');
+    }
     this.User = this.AppC.User;
     this.userUrl = this.User.usrUrl;
     this.usrRole = this.AppC.User.role;

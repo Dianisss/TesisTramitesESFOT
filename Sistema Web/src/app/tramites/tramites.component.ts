@@ -44,18 +44,31 @@ export class TramitesComponent implements OnInit {
   usrUID;
   selection = new FormControl();
   selected = '';
+  form: any;
 
   constructor(public dialog: MatDialog,private snack: MatSnackBar, private auth: AuthServiceService, private router: Router, private AppC: AppComponent) { }
 
   ngOnInit(): void {
+
+    if(!this.AppC.isLogged)
+    {
+      this.router.navigateByUrl('login');
+    }
     this.usrImg = this.AppC.usrImg;
     this.userName = this.AppC.User.name;
     this.usrRole = this.AppC.User.role;
     let sub = this.auth.listCats().subscribe(result =>{
-      this.Categories = result;      
+      this.Categories = result;
       this.filteredCategories = this.Categories;
       console.log(this.Categories)
     })
+  }
+
+  ngAfterViewInit()
+  {
+    this.usrImg = this.AppC.usrImg;
+    this.userName = this.AppC.User.name;
+    this.usrRole = this.AppC.User.role;
   }
 
   logOutUser()
@@ -71,7 +84,7 @@ export class TramitesComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result =>{
       if(result == 'created'){
-        
+
         this.snack.open('Tramite creado con exito', '', {duration: 2000})
       }
     })
@@ -85,7 +98,7 @@ export class TramitesComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result =>{
       if(result == 'created'){
-        
+
         this.snack.open('Tramite editado con exito', '', {duration: 2000})
       }
     })
@@ -146,14 +159,14 @@ export class TramitesComponent implements OnInit {
     {
       for(let f in subcats[index].temas)
       {
-       if(subcats[index].temas[f].name == tramite.name) 
+       if(subcats[index].temas[f].name == tramite.name)
        {
          subcats[index].temas.splice(f, 1);
        }
       }
     }
     this.auth.updateSubCategory(tramiteid, subcats);
-  } 
+  }
 
   enableTramite(tramite, subcat, selected)
   {
@@ -171,7 +184,7 @@ export class TramitesComponent implements OnInit {
     {
       for(let f in subcats[index].temas)
       {
-       if(subcats[index].temas[f].name == tramite.name) 
+       if(subcats[index].temas[f].name == tramite.name)
        {
          subcats[index].temas[f].visible = true;
        }
@@ -197,7 +210,7 @@ export class TramitesComponent implements OnInit {
     {
       for(let f in subcats[index].temas)
       {
-       if(subcats[index].temas[f].name == tramite.name) 
+       if(subcats[index].temas[f].name == tramite.name)
        {
          subcats[index].temas[f].visible = false;
        }
@@ -208,11 +221,11 @@ export class TramitesComponent implements OnInit {
   }
 
   searchData(searchValue: any) {
-    this.filteredCategories = this.Categories.filter((item: any) => {      
+    this.filteredCategories = this.Categories.filter((item: any) => {
       return item.name.toLowerCase().includes(searchValue.toLowerCase())
     });
   }
-  
+
 }
 
 @Component({
@@ -287,7 +300,7 @@ export class NewTramiteDialog implements OnInit{
       this.EditorObj.import(this.tramite.diagram);
 
     })
-    
+
 
   }
 
@@ -304,7 +317,7 @@ export class NewTramiteDialog implements OnInit{
       {
         if(this.uploadLink.length != 3)
         {
-          this.uploading = true;    
+          this.uploading = true;
           let dispName = event.target.files[0].name;
           console.log(event)
           let name = event.target.files[0].name;
@@ -325,7 +338,7 @@ export class NewTramiteDialog implements OnInit{
             });
           }
           else
-          { 
+          {
             this.storage.upload('/Lecturas/' + name + '.docx', this.currentUpload.file).then(response => {
               let url = this.storage.ref('/Lecturas/' + name + '.docx').getDownloadURL();
               url.subscribe(result => {
@@ -335,7 +348,7 @@ export class NewTramiteDialog implements OnInit{
                 this.uploadLink.push({'url': result, 'name': dispName})
               })
             });
-          }        
+          }
         }
         else
         {
@@ -372,17 +385,17 @@ export class NewTramiteDialog implements OnInit{
       let desc = this.DescriptInput.value;
       console.log(name);
       let copied = false;
-      
+
       let sub = this.auth.createCategory(name, desc, this.uploadLink);
       //this.auth.createAlert('Nuevo tramite: "'+name+'" esta disponible.');
       this.dialogRef.close('created');
-      
-      
+
+
     }
     else{
       this.snack.open('Debe seleccionar un cover/nombre.', '', {duration: 2000})
     }
-    
+
   }
 
   updateCat(){
@@ -406,9 +419,9 @@ export class NewTramiteDialog implements OnInit{
       let sub = this.auth.updateCategory(id, name, desc, this.uploadLink);
       this.dialogRef.close('updated');
     }
-    
-  
-    
+
+
+
   }
 
   zoomIn()
@@ -434,7 +447,7 @@ export class NewTramiteDialog implements OnInit{
         this.EditorObj.registerNode('myNode', html, '', {});
         var data = { "name": result };
         this.EditorObj.addNode('newNode', 0, 1, 10, 10, 'newNode', data, 'myNode', true);
-      }      
+      }
     })
   }
 
@@ -499,7 +512,7 @@ export class NewTramiteDialog implements OnInit{
 
     this.uid['subcats'][index]['temas'].push(body);
     this.auth.updateSubCategory(this.uid['id'], this.uid['subcats']);
-    
+
     //this.auth.createAlert('Nuevo tramite: "'+this.NameInput.value+'" esta disponible.');
     this.snack.open('Nuevo registro creado!', '', {duration: 2500});
     this.dialogRef.close('ok');
@@ -562,9 +575,9 @@ export class NewBlockDialog implements OnInit{
   }
 
   createBlock(){
-    this.dialogRef.close(this.NameInput.value);   
+    this.dialogRef.close(this.NameInput.value);
   }
-  
+
   onNoClick(): void {
     this.dialogRef.close(null);
   }
@@ -598,11 +611,11 @@ export class ViewTramite implements OnInit{
     this.body = this.data['doc']
     this.diagram = this.data['diagram']
     this.links = this.data['links']
-    
+
     this.delay(600).then(any =>{
       var docBody = document.getElementById('contenido').insertAdjacentHTML('beforeend',this.body);
       console.log(docBody)
-  
+
       var id = document.getElementById("drawflow");
       this.EditorObj = new Drawflow(id);
       this.EditorObj.start();
@@ -613,14 +626,14 @@ export class ViewTramite implements OnInit{
       this.EditorObj.import(this.diagram);
       this.EditorObj.editor_mode = 'view';
     })
-    
+
   }
 
   openDoc(link)
   {
     window.open(link, "_blank");
   }
-  
+
   onNoClick(): void {
     this.dialogRef.close(null);
   }

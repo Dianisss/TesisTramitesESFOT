@@ -11,7 +11,6 @@ import { CategusersComponent } from './categusers/categusers.component';
 import { SugestionsadminComponent } from './sugestionsadmin/sugestionsadmin.component';
 import { SugerenciasComponent } from './sugerencias/sugerencias.component';
 import { NotificationsComponent } from './notifications/notifications.component';
-
 const routes: Routes = [
   { path: 'login', component: LoginComponent},
   { path: 'register', component: RegisterComponent},

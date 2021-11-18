@@ -11,13 +11,12 @@ import { AngularFireStorageModule } from '@angular/fire/storage';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { AuthServiceService } from '../Services/auth-service.service';
 
 
 
 
 describe('LoginComponent', () => {
-  let component: LoginComponent;
-  let fixture: ComponentFixture<LoginComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -45,26 +44,26 @@ describe('LoginComponent', () => {
     .compileComponents();
   });
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(LoginComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
   it('Debería crear el componente', () => {
-    expect(component).toBeTruthy();
+
+    const fixture=TestBed.createComponent(LoginComponent);
+    const component2= fixture.componentInstance;
+    expect(component2).toBeTruthy();
+
   });
 
+  it('Debería verificarque los campos del correo electrónico y contraseña no esten vacios', () => {
 
-it ('Deberia validar que los campos de usuario y contraseña no este vacio', () =>{
+    const fixture=TestBed.createComponent(AuthServiceService);
+    const component2= fixture.componentInstance;
+    const cp= {mail: "narvaezdiana4@gmail.com", pass: '123456789'} || {};
+    const verificacion = component2.loginMailUser(cp.mail, cp.pass);
 
-  component.form.controls = 'narvaezdiana4@gmail.com'
-  component.currentUpload = '123456789'
+    expect(verificacion['required']).toBeFalsy();
+    expect(verificacion ['mail']).toBeFalsy();
+    expect(verificacion ['pass']).toBeFalsy();
 
-  expect(component.form.controls).not.toBeNull();
-  expect(component.currentUpload).not.toBeNull();
-
-});
+  });
 
 
 });

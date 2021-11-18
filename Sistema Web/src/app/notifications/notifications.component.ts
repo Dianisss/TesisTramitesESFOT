@@ -32,6 +32,11 @@ export class NotificationsComponent implements OnInit {
   constructor(private snack: MatSnackBar, private auth: AuthServiceService, private router: Router, private AppC: AppComponent) { }
 
   ngOnInit(): void {
+    
+    if(!this.AppC.isLogged)
+    {
+      this.router.navigateByUrl('login');
+    }
     this.usrImg = this.AppC.usrImg;
     this.userName = this.AppC.User.name;
     this.usrRole = this.AppC.User.role;
@@ -62,22 +67,39 @@ export class NotificationsComponent implements OnInit {
 
   enviar()
   {
+    let desc = this.options.get('descControl').value;
     if(this.cause == '')
     {
       this.snack.open('Debe seleccionar una causa', '', {duration: 2500})
     }
     else
     {
-      this.auth.createAlert(this.options.get('descControl').value, this.cause);
-      // this.auth.createAlert(this.options.get('titleControl').value, this.options.get('descControl').value, this.cause, this.AppC.User.uid);
-      this.snack.open('Enviado!', '', {duration: 2500});
-      this.options.get('titleControl').setValue('');
-      this.options.get('descControl').setValue('');
-      this.cause = '';
-      let btn1 = (document.getElementById('queja') as HTMLButtonElement);
-      let btn3 = (document.getElementById('Novedad') as HTMLButtonElement);
-      btn1.style.background = 'transparent'
-      btn3.style.background = 'transparent'
+      if(desc != '')
+      {
+        if(!desc.replace(/\s/g, '').length )
+        {
+          this.snack.open('No puede estar en blanco.', '', {duration: 2000})
+        }
+        else
+        {
+          this.auth.createAlert(this.options.get('descControl').value, this.cause);
+          // this.auth.createAlert(this.options.get('titleControl').value, this.options.get('descControl').value, this.cause, this.AppC.User.uid);
+          this.snack.open('Enviado!', '', {duration: 2500});
+          this.options.get('titleControl').setValue('');
+          this.options.get('descControl').setValue('');
+          this.cause = '';
+          let btn1 = (document.getElementById('queja') as HTMLButtonElement);
+          let btn3 = (document.getElementById('Novedad') as HTMLButtonElement);
+          btn1.style.background = 'transparent'
+          btn3.style.background = 'transparent'
+        }
+      }
+      else
+      {
+        this.snack.open('No puede estar en blanco.', '', {duration: 2500});
+      }
+
+      
     }
 
   }
