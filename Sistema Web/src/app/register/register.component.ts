@@ -72,19 +72,34 @@ export class RegisterComponent implements OnInit {
     let val1 = this.options.get('namesControl').value.match(/\d+/g);
     let val2 = this.options.get('lastnamesControl').value.match(/\d+/g);
 
-    if(val1 != null || val2 != null)
+    if(val1 != null || val2 != null )
     {
-      this.snack.open('Por favor revisar los campos...', '', {duration: 2000})
+      this.snack.open('Campo no puede llevar números', '', {duration: 2000})
       this.options.get('namesControl').clearAsyncValidators;
       this.options.get('lastnamesControl').clearAsyncValidators;
       return
     }
     else
     {
+      let name = this.options.get('namesControl').value;
+      let lastname = this.options.get('lastnamesControl').value;
+      if(!name.replace(/\s/g, '').length )
+      {
+
+        this.snack.open('Campo no puede estar en blanco', '', {duration: 2000})
+        return;
+      }
+      else if(!lastname.replace(/\s/g, '').length )
+      {
+        this.snack.open('Campo no puede estar en blanco', '', {duration: 2000})
+        return
+      }
+
       console.log(names,lastnames,roles, mail, pass);
 
-      if(pass.length <= 5){this.snack.open('Clave debe tener minimo 6 caracteres!', '', {duration: 2000})}
+      if(pass.length <= 5){this.snack.open('Clave debe tener mínimo 6 caracteres!', '', {duration: 2000})}
       if(pass === pass2)
+
       {
         let sub = this.authService.createMailUser(mail, pass, names, lastnames, roles).then(result =>{
           console.log(result)
@@ -93,26 +108,29 @@ export class RegisterComponent implements OnInit {
           this.options.get('emailControl').setValue('');
           this.options.get('passwControl').setValue('');
           this.options.get('roleControl').setValue('');
-          if(result== 'ok'){
+
+           if(result== 'ok'){
             this.delay(100).then(any =>{
+
               this.snack.open('Usuario creado con exito...', 'x', {duration: 5000});
             })
-            
+
           }
-          
+
         })
         this.snack.open('Creando usuario espere....', 'x', {duration: 3000});
       }
       else
       {
+
         this.snack.open('Claves son diferentes!', '', {duration: 2000})
       }
-      
 
 
-      
+
+
     }
-    
+
   }
 
   async delay(ms: number) {

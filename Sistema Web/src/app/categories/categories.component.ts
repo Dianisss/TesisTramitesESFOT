@@ -62,7 +62,7 @@ export class CategoriesComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result =>{
       if(result == 'created'){
 
-        this.snack.open('Categoria creada con exito', '', {duration: 2000})
+        this.snack.open('Categoría creada con éxito', '', {duration: 2000})
       }
     })
   }
@@ -76,7 +76,7 @@ export class CategoriesComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result =>{
       if(result == 'created'){
 
-        this.snack.open('Subcategoria creada con éxito', '', {duration: 2000})
+        this.snack.open('Subcategoría creada con éxito', '', {duration: 2000})
       }
     })
   }
@@ -182,7 +182,7 @@ export class CategoriesComponent implements OnInit {
         }
         else
         {
-          this.snack.open('No tiene permisos para eliminar esta categoria', '', {duration: 2000});
+          this.snack.open('No tiene permisos para eliminar esta categoría', '', {duration: 2000});
         }
       }
     }
@@ -282,21 +282,30 @@ export class NewCategoryDialog implements OnInit{
       }
       if(copied)
       {
-        this.snack.open('La categoria ya existe.', '', {duration: 2000})
+        this.snack.open('La categoría ya existe.', '', {duration: 2000})
       }
       else
       {
+        if(name != ''){
+          if(!name.replace(/\s/g, '').length ){
+            this.snack.open('El nombre no puede ir en blanco','', {duration:2000})
+          }
+          else
+        {
         let sub = this.auth.createCategory(name, desc, this.uploadLink);
-        //this.auth.createAlert('Nueva categoria: "'+name+'" esta disponible');
+
         this.dialogRef.close('created');
       }
+    }
 
     }
+  }
     else{
       this.snack.open('Debe seleccionar un cover/nombre.', '', {duration: 2000})
     }
 
   }
+
 
   updateCat(){
     let name = this.NameInput.value;
@@ -392,7 +401,7 @@ export class NewSubCategoryDialog implements OnInit{
       }
       if(copied)
       {
-        this.snack.open('Esta sub-categoria ya existe.', '', {duration: 2000})
+        this.snack.open('Esta subcategoría ya existe.', '', {duration: 2000})
       }
       else
       {

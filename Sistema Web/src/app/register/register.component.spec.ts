@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RegisterComponent } from './register.component';
 import { AuthServiceService } from '../Services/auth-service.service';
-import { LoginComponent } from '../login/login.component';
+
 
 
 describe('RegisterComponent', () => {

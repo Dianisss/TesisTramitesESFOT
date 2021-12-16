@@ -78,7 +78,7 @@ export class MyprofileComponent implements OnInit {
     let val2 = this.options.get('lastnamesControl').value.match(/\d+/g);
     if(val1 != null || val2 != null)
     {
-      this.snack.open('No se permiten números en el nombre', '', {duration: 2000})
+      this.snack.open('No se permiten números', '', {duration: 2000})
       return;
     }
     else
@@ -88,17 +88,17 @@ export class MyprofileComponent implements OnInit {
       if(!name.replace(/\s/g, '').length )
       {
 
-        this.snack.open('Nombre no puede estar en blanco', '', {duration: 2000})
+        this.snack.open('Campo no puede estar en blanco', '', {duration: 2000})
         return;
       }
       else if(!lastname.replace(/\s/g, '').length )
       {
-        this.snack.open('Nombre no puede estar en blanco', '', {duration: 2000})
+        this.snack.open('Campo no puede estar en blanco', '', {duration: 2000})
         return
       }
       else
       {
-        this.userService.updateUser(this.User.uid, this.options.get('namesControl').value, this.options.get('lastnamesControl').value, this.userUrl).then(any => this.snack.open('Cambios guardados!', '', {duration: 2000}));
+        this.userService.updateUser(this.User.uid, this.options.get('namesControl').value, this.options.get('lastnamesControl').value, this.userUrl).then(any => this.snack.open('Cambios actualizados!', '', {duration: 2000}));
       }
 
     }

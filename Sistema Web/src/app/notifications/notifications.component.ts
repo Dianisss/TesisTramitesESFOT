@@ -32,7 +32,7 @@ export class NotificationsComponent implements OnInit {
   constructor(private snack: MatSnackBar, private auth: AuthServiceService, private router: Router, private AppC: AppComponent) { }
 
   ngOnInit(): void {
-    
+
     if(!this.AppC.isLogged)
     {
       this.router.navigateByUrl('login');
@@ -70,7 +70,7 @@ export class NotificationsComponent implements OnInit {
     let desc = this.options.get('descControl').value;
     if(this.cause == '')
     {
-      this.snack.open('Debe seleccionar una causa', '', {duration: 2500})
+      this.snack.open('Debe seleccionar la causa Noticia', '', {duration: 2500})
     }
     else
     {
@@ -99,7 +99,7 @@ export class NotificationsComponent implements OnInit {
         this.snack.open('No puede estar en blanco.', '', {duration: 2500});
       }
 
-      
+
     }
 
   }
